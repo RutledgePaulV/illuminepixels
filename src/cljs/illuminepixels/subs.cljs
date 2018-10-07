@@ -3,14 +3,7 @@
     [re-frame.core :as rf]
     [cljs.core.async :as async]
     [reagent.ratom :as ratom]
-    [illuminepixels.events :as events]
-    [illuminepixels.utils :as utils]))
-
-(def reducers
-  {::latest     {:init nil :reduce (fn [_ next] next)}
-   ::merging    {:init {} :reduce utils/deep-merge}
-   ::everything {:init [] :reduce conj}})
-
+    [illuminepixels.events :as events]))
 
 (rf/reg-sub ::name
   (fn [db] (:name db)))
