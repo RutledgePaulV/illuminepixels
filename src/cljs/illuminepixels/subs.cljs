@@ -1,51 +1,58 @@
 (ns illuminepixels.subs
   (:require
-    [re-frame.core :as re-frame]
+    [re-frame.core :as rf]
     [cljs.core.async :as async]
     [reagent.ratom :as ratom]
-    [illuminepixels.events :as events]))
+    [illuminepixels.events :as events]
+    [illuminepixels.utils :as utils]))
+
+(def reducers
+  {::latest     {:init nil :reduce (fn [_ next] next)}
+   ::merging    {:init {} :reduce utils/deep-merge}
+   ::everything {:init [] :reduce conj}})
 
 
-(re-frame/reg-sub
-  ::name
-  (fn [db]
-    (:name db)))
+(rf/reg-sub ::name
+  (fn [db] (:name db)))
 
+(rf/reg-sub ::active-panel
+  (fn [db _] (:active-panel db)))
 
-(re-frame/reg-sub
-  ::active-panel
-  (fn [db _]
-    (:active-panel db)))
+(rf/reg-sub ::initialised?
+  (fn [db _] (contains? db :websocket)))
 
-(re-frame/reg-sub
-  ::initialised?
-  (fn [db _]
-    (contains? db :websocket)))
-
-(re-frame/reg-sub-raw
-  ::subscribe
-  (fn [db [_ query]]
-    (let [transaction (random-uuid)
-          protocol    :subscription
-          values      (deref db)
-          sink        (get-in values [:websocket :sink])
-          source      (get-in values [:websocket :source])]
+(rf/reg-sub-raw ::subscribe
+  (fn [db [_ query initial reducer]]
+    (let [new-transaction (random-uuid)
+          protocol        :subscription
+          values          (deref db)
+          initial         (or initial [])
+          reducer         (or reducer conj)
+          sink            (get-in values [:websocket :sink])
+          source          (get-in values [:websocket :source])]
       (letfn [(pipe [{:keys [protocol transaction]}]
                 (and
                   (= protocol :subscription)
-                  (= transaction transaction)))
+                  (= new-transaction transaction)))
               (command [datas]
-                (merge datas {:transaction transaction :protocol protocol}))]
+                (merge datas {:transaction new-transaction :protocol protocol}))]
         (let [sub (async/tap source (async/chan 1 (filter pipe)))]
           (async/go-loop []
             (when-some [event (async/<! sub)]
-              (re-frame/dispatch [::events/assoc-in [:subscriptions transaction] (get event :data)])
+              (rf/dispatch
+                [::events/update-in
+                 [:subscriptions new-transaction]
+                 (fn [current]
+                   (reduce reducer
+                           (or current initial)
+                           (let [data (get event :data)]
+                             (if (vector? data) data [data]))))])
               (recur)))
           (async/put! sink (command {:data query}))
           (ratom/make-reaction
-            (fn [] (get-in @db [:subscriptions transaction]))
+            (fn [] (get-in @db [:subscriptions new-transaction] initial))
             :on-dispose
             (fn []
               (async/close! sub)
               (async/put! sink (command {:unsubscribe true}))
-              (re-frame/dispatch [::events/dissoc-in [:subscriptions transaction]]))))))))
+              (rf/dispatch [::events/dissoc-in [:subscriptions new-transaction]]))))))))

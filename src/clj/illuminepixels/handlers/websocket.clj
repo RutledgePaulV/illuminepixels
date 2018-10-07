@@ -8,10 +8,10 @@
 (defmulti handle-subscribe dispatch)
 
 
-(defmethod handle-subscribe :ping [command]
+(defmethod handle-subscribe :ping [{:keys [millis] :or {millis 5000}}]
   (let [response (async/chan)]
     (async/go-loop [counter 0]
       (when (async/>! response {:pong true :count counter})
-        (async/<! (async/timeout 5000))
+        (async/<! (async/timeout millis))
         (recur (inc counter))))
     response))

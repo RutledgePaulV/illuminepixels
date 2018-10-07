@@ -1,7 +1,7 @@
 (ns illuminepixels.handlers
   (:require [haslett.format :as fmt]
             [haslett.client :as ws]
-            [re-frame.core :as re-frame]
+            [re-frame.core :as rf]
             [cljs.core.async :as async]
             [illuminepixels.events :as events]))
 
@@ -11,11 +11,13 @@
     (let [{:keys [socket close-status source sink]}
           (async/<! (ws/connect url {:format fmt/edn}))
           multiplexed (async/mult source)]
-      (re-frame/dispatch [::events/websocket-connected {:socket socket :source multiplexed :sink sink}])
+      ; start the heartbeat
+      (async/put! sink {:protocol :subscription :data {:kind :ping} :transaction (random-uuid)})
+      (rf/dispatch [::events/websocket-connected {:socket socket :source multiplexed :sink sink}])
       (async/go
         (let [{:keys [code reason]} (async/<! close-status)]
           (.error js/console "websocket error" code reason)
-          (re-frame/dispatch [::events/websocket-disconnected])
-          (re-frame/dispatch [::events/websocket-connect config]))))))
+          (rf/dispatch [::events/websocket-disconnected])
+          (rf/dispatch [::events/websocket-connect config]))))))
 
-(re-frame/reg-fx :websocket websocket-cofx)
+(rf/reg-fx :websocket websocket-cofx)

@@ -1,20 +1,18 @@
 (ns illuminepixels.views
   (:require
-   [re-frame.core :as re-frame]
-   [illuminepixels.subs :as subs]))
+    [re-frame.core :as rf]
+    [illuminepixels.subs :as subs]))
 
 
 ;; home
 
 (defn home-panel []
-  (let [name (re-frame/subscribe [::subs/subscribe {:kind :ping}])]
+  (let [name (rf/subscribe [::subs/ping {:kind :ping}])]
     [:div
      [:h1 (str "Hello from " @name ". This is the Home Page.")]
-
      [:div
       [:a {:href "#/about"}
-       "go to About Page"]]
-     ]))
+       "go to About Page"]]]))
 
 
 ;; about
@@ -40,5 +38,5 @@
   [panels panel-name])
 
 (defn main-panel []
-  (let [active-panel (re-frame/subscribe [::subs/active-panel])]
+  (let [active-panel (rf/subscribe [::subs/active-panel])]
     [show-panel @active-panel]))
