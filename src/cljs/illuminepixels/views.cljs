@@ -7,7 +7,7 @@
 ;; home
 
 (defn home-panel []
-  (let [name (rf/subscribe [::subs/ping {:kind :ping}])]
+  (let [name (rf/subscribe [::subs/name])]
     [:div
      [:h1 (str "Hello from " @name ". This is the Home Page.")]
      [:div
