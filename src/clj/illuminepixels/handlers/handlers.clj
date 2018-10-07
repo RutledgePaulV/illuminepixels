@@ -74,8 +74,9 @@
             (swap! *subscriptions* assoc transaction response)
             (async/go-loop []
               (when-some [res (async/<! response)]
-                (async/>! *messages* {:data res :protocol SUBSCRIPTION_PROTO :transaction transaction})
-                (recur))))))
+                (if (async/>! *messages* {:data res :protocol SUBSCRIPTION_PROTO :transaction transaction})
+                  (recur)
+                  (async/close! response)))))))
       (#{PUSH_PROTO} protocol)
       (ws/handle-push command))))
 
