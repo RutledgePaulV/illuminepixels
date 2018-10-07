@@ -26,9 +26,12 @@
   (reagent/render [top-panel]
     (.getElementById js/document "app")))
 
+(defn initialize []
+  (re-frame/dispatch-sync [::events/initialize-db])
+  (re-frame/dispatch-sync [::events/websocket-connect {:url "ws://localhost:3000/ws"}]))
+
 (defn ^:export init []
   (routes/app-routes)
-  (re-frame/dispatch-sync [::events/initialize-db])
-  (re-frame/dispatch-sync [::events/websocket-connect {:url "ws://localhost:3000/ws"}])
+  (initialize)
   (dev-setup)
   (mount-root))

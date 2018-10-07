@@ -8,12 +8,10 @@
 (defmulti handle-subscribe dispatch)
 
 
-
 (defmethod handle-subscribe :ping [command]
-  (let [counter  (atom 0)
-        response (async/chan)]
-    (async/go-loop []
-      (async/<! (async/timeout 5000))
-      (async/>! response {:pong true :count (swap! counter inc)})
-      (recur))
+  (let [response (async/chan)]
+    (async/go-loop [counter 0]
+      (when (async/>! response {:pong true :count counter})
+        (async/<! (async/timeout 5000))
+        (recur (inc counter))))
     response))

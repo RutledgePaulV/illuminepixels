@@ -34,20 +34,18 @@
                 (and
                   (= protocol :subscription)
                   (= transaction transaction)))
-              (command [data]
-                {:data data :transaction transaction :protocol protocol})
-              (unsubscribe []
-                {:unsubscribe true :transaction transaction :protocol protocol})]
+              (command [datas]
+                (merge datas {:transaction transaction :protocol protocol}))]
         (let [sub (async/tap source (async/chan 1 (filter pipe)))]
           (async/go-loop []
             (when-some [event (async/<! sub)]
               (re-frame/dispatch [::events/assoc-in [:subscriptions transaction] (get event :data)])
               (recur)))
-          (async/put! sink (command query))
+          (async/put! sink (command {:data query}))
           (ratom/make-reaction
             (fn [] (get-in @db [:subscriptions transaction]))
             :on-dispose
             (fn []
               (async/close! sub)
-              (async/put! sink (unsubscribe))
+              (async/put! sink (command {:unsubscribe true}))
               (re-frame/dispatch [::events/dissoc-in [:subscriptions transaction]]))))))))

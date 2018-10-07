@@ -16,6 +16,6 @@
         (let [{:keys [code reason]} (async/<! close-status)]
           (.error js/console "websocket error" code reason)
           (re-frame/dispatch [::events/websocket-disconnected])
-          (websocket-cofx config))))))
+          (re-frame/dispatch [::events/websocket-connect config]))))))
 
 (re-frame/reg-fx :websocket websocket-cofx)
