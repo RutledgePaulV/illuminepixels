@@ -26,12 +26,12 @@
   (reagent/render [top-panel]
     (.getElementById js/document "app")))
 
-(defn initialize []
+(defn initial-events []
   (rf/dispatch-sync [::events/initialize-db])
   (rf/dispatch-sync [::events/websocket-connect {:url "ws://localhost:3000/ws"}]))
 
 (defn ^:export init []
-  (routes/app-routes)
-  (initialize)
   (dev-setup)
+  (routes/app-routes)
+  (initial-events)
   (mount-root))

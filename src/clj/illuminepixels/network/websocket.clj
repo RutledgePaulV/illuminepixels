@@ -1,4 +1,4 @@
-(ns illuminepixels.handlers.websocket
+(ns illuminepixels.network.websocket
   (:require [clojure.core.async :as async]))
 
 (def ^:dynamic *state* nil)

@@ -17,6 +17,8 @@
     (.setEnabled true)))
 
 (defn app-routes []
+  (secretary/reset-routes!)
+
   (secretary/set-config! :prefix "#")
   ;; --------------------
   ;; define routes here

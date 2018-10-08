@@ -1,9 +1,9 @@
-(ns illuminepixels.handlers.handlers
+(ns illuminepixels.network.handlers
   (:require [compojure.core :refer :all]
             [compojure.route :refer [resources]]
             [ring.adapter.jetty9.websocket :as jws]
-            [illuminepixels.handlers.web :as web]
-            [illuminepixels.handlers.websocket :as ws]
+            [illuminepixels.network.web :as web]
+            [illuminepixels.network.websocket :as ws]
             [ring.util.response :refer [resource-response]]
             [ring.middleware.reload :refer [wrap-reload]]
             [clojure.edn :as edn]

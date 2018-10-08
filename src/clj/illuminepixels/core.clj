@@ -1,5 +1,5 @@
 (ns illuminepixels.core
-  (:require [illuminepixels.handlers.handlers :as handlers]
+  (:require [illuminepixels.network.handlers :as handlers]
             [illuminepixels.utils :as utils]
             [ring.adapter.jetty9 :as jetty])
   (:gen-class))

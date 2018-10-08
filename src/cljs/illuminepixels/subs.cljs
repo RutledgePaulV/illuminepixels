@@ -19,24 +19,22 @@
     (let [new-transaction (random-uuid)
           protocol        :subscription
           values          (deref db)
-          initial         (or initial [])
-          reducer         (or reducer conj)
           sink            (get-in values [:websocket :sink])
           source          (get-in values [:websocket :source])]
-      (letfn [(pipe [{:keys [protocol transaction]}]
+      (letfn [(tap [{:keys [protocol transaction]}]
                 (and
                   (= protocol :subscription)
                   (= new-transaction transaction)))
               (command [datas]
                 (merge datas {:transaction new-transaction :protocol protocol}))]
-        (let [sub (async/tap source (async/chan 1 (filter pipe)))]
+        (let [sub (async/tap source (async/chan 1 (filter tap)))]
           (async/go-loop []
             (when-some [event (async/<! sub)]
               (rf/dispatch
                 [::events/update-in
                  [:subscriptions new-transaction]
                  (fn [current]
-                   (reduce reducer
+                   (reduce (or reducer (fn [_ x] x))
                            (or current initial)
                            (let [data (get event :data)]
                              (if (vector? data) data [data]))))])
