@@ -9,12 +9,13 @@ illuminepixels.io {
     proxy / appserver:3000 {
         transparent
         websocket
-        cache {
-            match_header Content-Type image/jpg image/png application/javascript text/css
-            status_header X-Cache-Status
-            default_max_age 15m
-            path /tmp/caddy-cache
-        }
+    }
+
+    cache {
+        match_header Content-Type image/jpg image/png application/javascript text/css
+        status_header X-Cache-Status
+        default_max_age 15m
+        path /tmp/caddy-cache
     }
 
     gzip
