@@ -7,7 +7,8 @@
     [illuminepixels.views :as views]
     [illuminepixels.config :as config]
     [illuminepixels.subs :as subs]
-    [illuminepixels.handlers :as handlers]))
+    [illuminepixels.utils :as utils]
+    [illuminepixels.cofx :as cofx]))
 
 
 (defn dev-setup []
@@ -28,7 +29,7 @@
 
 (defn initial-events []
   (rf/dispatch-sync [::events/initialize-db])
-  (rf/dispatch-sync [::events/websocket-connect {:url "ws://localhost:3000/ws"}]))
+  (rf/dispatch-sync [::events/websocket-connect {:url (utils/websocket-url)}]))
 
 (defn ^:export init []
   (dev-setup)

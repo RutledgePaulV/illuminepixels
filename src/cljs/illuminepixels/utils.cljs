@@ -1,4 +1,5 @@
-(ns illuminepixels.utils)
+(ns illuminepixels.utils
+  (:require [clojure.string :as strings]))
 
 
 (defn dissoc-in
@@ -16,3 +17,22 @@
                 (apply merge-with inner-merge ms)
                 (last ms))))]
     (apply inner-merge maps)))
+
+(defn get-websocket-port []
+  (str (aget js/window "location" "port")))
+
+(defn get-websocket-host []
+  (str (aget js/window "location" "hostname")))
+
+(defn get-websocket-proto []
+  (let [proto (str (aget js/window "location" "protocol"))]
+    (get {"http:" "ws" "https:" "wss"} proto)))
+
+(defn websocket-url []
+  (let [proto (get-websocket-proto)
+        host  (get-websocket-host)
+        port  (get-websocket-port)
+        path  "/ws"]
+    (if (strings/blank? port)
+      (str proto "://" host path)
+      (str proto "://" host ":" port path))))

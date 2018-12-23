@@ -2,19 +2,20 @@
   (:require [missing.core :as miss])
   (:import (java.util UUID)))
 
-(def default-ring-settings
-  {:port                 3000
-   :max-threads          500
-   :async?               true
-   :allow-null-path-info true
-   :send-server-version? false})
-
 (def default-settings
-  {:ring default-ring-settings})
+  {:ring
+   {:port                 3000
+    :max-threads          500
+    :async?               true
+    :allow-null-path-info true
+    :send-server-version? false}})
 
 (defn get-settings []
   (->> (miss/load-edn-resource "settings.edn")
        (miss/deep-merge default-settings)))
+
+(defn get-ring-settings []
+  (get (get-settings) :ring))
 
 (defn on-close [chan f]
   (add-watch

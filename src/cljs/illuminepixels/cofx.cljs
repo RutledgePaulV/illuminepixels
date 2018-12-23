@@ -1,4 +1,4 @@
-(ns illuminepixels.handlers
+(ns illuminepixels.cofx
   (:require [haslett.format :as fmt]
             [haslett.client :as ws]
             [re-frame.core :as rf]

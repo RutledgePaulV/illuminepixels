@@ -1,13 +1,16 @@
 (ns illuminepixels.core
-  (:require [illuminepixels.network.handlers :as handlers]
+  (:require [illuminepixels.network.socket :as sock]
             [illuminepixels.utils :as utils]
-            [ring.adapter.jetty9 :as jetty])
+            [mount.core :as mount])
+  (:import (org.eclipse.jetty.server Server))
   (:gen-class))
 
 
+(mount/defstate server
+  :start (sock/server (utils/get-ring-settings))
+  :stop (when (instance? Server server) (.destroy server)))
 
 
 (defn -main [& args]
-  (let [settings   (:ring (utils/get-settings))
-        ws-options {:websockets {"/ws" handlers/websocket-handler}}]
-    (jetty/run-jetty handlers/web-handler (merge settings ws-options))))
+  (mount/start)
+  @(promise))
