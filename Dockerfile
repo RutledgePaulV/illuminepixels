@@ -30,7 +30,7 @@ WORKDIR /usr/src/app
 COPY project.clj project.clj
 RUN lein deps && rm project.clj
 COPY . /usr/src/app
-RUN lein uberjar
+RUN lein with-profile +uberjar uberjar
 
 EXPOSE 3000
 CMD ["java", "-jar", "/usr/src/app/target/illuminepixels.jar"]
