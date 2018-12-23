@@ -3,9 +3,10 @@
             [missing.core :as miss]
             [clojure.core.async :as async]
             [illuminepixels.network.api :as napi]
-            [clojure.edn :as edn]
+            [cognitect.transit :as transit]
             [taoensso.timbre :as logger]
-            [ring.adapter.jetty9.websocket :as jws]))
+            [ring.adapter.jetty9.websocket :as jws])
+  (:import (java.io ByteArrayOutputStream ByteArrayInputStream)))
 
 (defn callbacks-for-chan [chan]
   {:write-failed
@@ -15,7 +16,10 @@
 
 (defn send-message! [ws data]
   (let [finished (async/promise-chan)]
-    (jws/send! ws (pr-str data) (callbacks-for-chan finished))
+    (let [output (ByteArrayOutputStream. 4096)
+          writer (transit/writer output :json)]
+      (transit/write writer data)
+      (jws/send! ws (String. (.toByteArray output)) (callbacks-for-chan finished)))
     finished))
 
 (defn on-connect [ws]
@@ -34,9 +38,8 @@
     (doseq [sub (vals subscriptions)]
       (miss/quietly (async/close! sub)))))
 
-(defn on-text [ws message]
+(defn on-command [ws command]
   (let [closure     napi/*state*
-        command     (edn/read-string message)
         protocol    (get command :protocol)
         transaction (get command :transaction)
         {:keys [messages subscriptions]} (deref closure)]
@@ -59,8 +62,17 @@
       :push
       (napi/handle-push command))))
 
-(defn on-bytes [& args]
-  (throw (ex-info "Unsupported websocket method." {})))
+(defn on-text [ws message]
+  (let [stream (ByteArrayInputStream. (.getBytes message))
+        reader (transit/reader stream :json)]
+    (on-command ws (transit/read reader))))
+
+(defn on-bytes [ws bytes offset len]
+  (let [buffer (byte-array len)
+        voided (System/arraycopy bytes offset buffer 0 len)
+        stream (ByteArrayInputStream. buffer)
+        reader (transit/reader stream :json)]
+    (on-command ws (transit/read reader))))
 
 (defn websocket-routes [req]
   (let [closure (atom (napi/new-state req))]

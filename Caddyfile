@@ -11,7 +11,9 @@ illuminepixels.io {
         websocket
     }
 
-    gzip
+    gzip {
+        ext .js .css
+    }
 
     tls rutledgepaulv@gmail.com
 }

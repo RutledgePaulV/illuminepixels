@@ -9,7 +9,7 @@
 (defn websocket-cofx [{:keys [url] :as config}]
   (async/go
     (let [{:keys [socket close-status source sink]}
-          (async/<! (ws/connect url {:format fmt/edn}))
+          (async/<! (ws/connect url {:format fmt/transit}))
           multiplexed (async/mult source)]
       ; start the heartbeat
       (async/put! sink {:protocol :subscription :data {:kind :ping} :transaction (random-uuid)})

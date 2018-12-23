@@ -9,6 +9,8 @@
                  [ring/ring-defaults "0.3.2"]
                  [com.taoensso/timbre "4.10.0"]
                  [info.sunng/ring-jetty9-adapter "0.12.2"]
+                 [com.cognitect/transit-clj "0.8.313"]
+                 [com.cognitect/transit-cljs "0.8.256"]
                  [com.vodori/missing "0.1.4"]
                  [mount "0.1.15"]
                  [reagent "0.8.1"]
