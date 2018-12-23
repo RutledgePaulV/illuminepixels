@@ -6,11 +6,6 @@
 
 (defroutes web-routes
 
-  (GET "/healthz" []
-    (-> (pr-str {:healthy true})
-        (response/response)
-        (response/content-type "application/edn")))
-
   (GET "/" []
     (response/resource-response "index.html" {:root "public"}))
 

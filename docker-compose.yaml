@@ -4,7 +4,7 @@ services:
     build: .
     restart: always
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/healthz"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
   webserver:
     image: abiosoft/caddy:0.11.1
     container_name: caddy
