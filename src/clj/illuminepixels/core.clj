@@ -7,8 +7,12 @@
 
 
 (mount/defstate server
-  :start (sock/server (utils/get-ring-settings))
-  :stop (when (instance? Server server) (.destroy server)))
+  :start
+  (sock/server
+    (utils/get-ring-settings))
+  :stop
+  (when (instance? Server server)
+    (.stop server)))
 
 
 (defn -main [& args]

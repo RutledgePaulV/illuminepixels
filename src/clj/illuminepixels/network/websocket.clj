@@ -30,7 +30,7 @@
         (recur)))))
 
 (defn on-error [ws e]
-  (logger/error e))
+  (logger/error (ex-message e)))
 
 (defn on-close [ws status reason]
   (let [[{:keys [messages subscriptions]}] (reset-vals! napi/*state* {})]
@@ -48,9 +48,16 @@
       (let [response (napi/handle-request (:data command))]
         (async/put! messages {:data response :protocol protocol :transaction transaction}))
       :subscription
-      (if (contains? subscriptions transaction)
-        (when (get command :unsubscribe)
-          (async/close! (get subscriptions transaction)))
+      (cond
+
+        (get command :unsubscribe)
+        (when-some [sub (get subscriptions transaction)]
+          (async/close! sub))
+
+        (contains? subscriptions transaction)
+        nil
+
+        :otherwise
         (when-some [response (napi/handle-subscribe (:data command))]
           (utils/on-close response (fn [] (swap! closure miss/dissoc-in [:subscriptions transaction])))
           (swap! closure assoc-in [:subscriptions transaction] response)

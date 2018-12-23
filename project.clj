@@ -13,18 +13,18 @@
                  [com.cognitect/transit-cljs "0.8.256"]
                  [com.vodori/missing "0.1.4"]
                  [mount "0.1.15"]
-                 [reagent "0.8.1"]
                  [re-frame "0.10.6"]
+                 [cljsjs/react "16.6.0-0"]
+                 [cljsjs/react-dom "16.6.0-0"]
+                 [reagent "0.8.1" :exclusions [cljsjs/react cljsjs/react-dom]]
+                 [re-frame "0.10.6" :exclusions [cljsjs/react cljsjs/react-dom]]
                  [secretary "1.2.3"]
                  [garden "1.3.6"]
                  [ns-tracker "0.3.1"]
                  [compojure "1.6.1"]
                  [haslett "0.1.2"]]
 
-  :plugins [[lein-cljsbuild "1.1.7"]
-            [lein-garden "0.2.8"]]
-
-  :min-lein-version "2.5.3"
+  :plugins [[lein-cljsbuild "1.1.7"] [lein-garden "0.2.8"]]
 
   :source-paths ["src/clj" "src/cljc" "src/cljs"]
 
@@ -45,9 +45,12 @@
 
   :profiles
   {:dev     {:dependencies [[binaryage/devtools "0.9.10"]
-                            [day8.re-frame/re-frame-10x "0.3.6"]
-                            [day8.re-frame/tracing "0.5.1"]]
-             :plugins      [[lein-figwheel "0.5.16"]]}
+                            [day8.re-frame/re-frame-10x "0.3.6-react16"]
+                            [day8.re-frame/tracing "0.5.1"]
+                            [cider/piggieback "0.3.10"]
+                            [figwheel-sidecar "0.5.18"]]
+
+             :repl-options {:nrepl-middleware [cider.piggieback/wrap-cljs-repl]}}
 
    :uberjar {:dependencies [[day8.re-frame/tracing-stubs "0.5.1"]]
              :omit-source  true
@@ -66,8 +69,10 @@
                     :output-dir           "resources/public/js/compiled/out"
                     :asset-path           "js/compiled/out"
                     :source-map-timestamp true
+                    :infer-externs        true
                     :preloads             [devtools.preload day8.re-frame-10x.preload]
-                    :closure-defines      {"re_frame.trace.trace_enabled_QMARK_"        true
+                    :closure-defines      {goog.DEBUG                                   true
+                                           "re_frame.trace.trace_enabled_QMARK_"        true
                                            "day8.re_frame.tracing.trace_enabled_QMARK_" true}
                     :external-config      {:devtools/config {:features-to-install :all}}}}
 

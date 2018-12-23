@@ -2,5 +2,11 @@
 /target
 /*-init.clj
 /resources/public/js/compiled
-out
 .rebel_readline_history
+.nrepl-port
+.idea/
+.DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store
+*.iml
