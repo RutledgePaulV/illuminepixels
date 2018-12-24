@@ -40,17 +40,14 @@
   (let [blogs @(rf/subscribe [::subs/blogs])]
     [:section
      [:div.row
-      (mapcat identity
-        (for [{{:keys [slug title summary created]} :metadata} blogs]
-          (let [timestamp (get created :timestamp)]
-            [[:div.col.col-md-1]
-             [:div.col.col-md-4 {:key slug}
-              [:div.card
-               [:h3.card-title
-                [:a {:href (routes/view->path :blog-panel {:slug slug})} title]
-                [:span {:style {:float "right"}} (utils/format-date timestamp)]]
-               summary]]
-             [:div.col.col-md-1]])))]]))
+      (for [{{:keys [slug title summary created]} :metadata} blogs]
+        (let [timestamp (get created :timestamp)]
+          [:div.col.col-md-6 {:key slug}
+           [:div.card
+            [:h3.card-title
+             [:a {:href (routes/view->path :blog-panel {:slug slug})} title]
+             [:span {:style {:float "right"}} (utils/format-date timestamp)]]
+            summary]]))]]))
 
 (defn games-panel []
   [:div [:h1 "This is the games page."]])
