@@ -39,3 +39,17 @@
   ::websocket-disconnected
   (fn-traced [db [_ data]]
     (dissoc db :websocket :requests :subscriptions)))
+
+(rf/reg-event-db
+  ::route-change
+  (fn-traced [db [_ {{name :name} :data
+                     query-params :query-params
+                     path-params  :path-params
+                     template     :template
+                     path         :path}]]
+    (assoc db :active-route
+              {:name         name
+               :template     template
+               :query-params query-params
+               :path-params  path-params
+               :path         path})))

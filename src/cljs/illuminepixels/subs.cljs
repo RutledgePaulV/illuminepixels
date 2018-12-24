@@ -5,14 +5,21 @@
     [reagent.ratom :as ratom]
     [illuminepixels.events :as events]))
 
-(rf/reg-sub ::name
-  (fn [db] (:name db)))
-
-(rf/reg-sub ::active-panel
-  (fn [db _] (:active-panel db)))
+(rf/reg-sub ::active-route
+  (fn [db _] (get-in db [:active-route])))
 
 (rf/reg-sub ::initialised?
   (fn [db _] (contains? db :websocket)))
+
+(rf/reg-sub ::blogs
+  :<- [::subscribe {:kind :blog}]
+  (fn [blogs] blogs))
+
+(rf/reg-sub ::blog
+  :<- [::blogs]
+  (fn [blogs [_ slug]]
+    (letfn [(it? [blog] (= slug (get-in blog [:metadata :slug])))]
+      (first (drop-while (complement it?) blogs)))))
 
 (rf/reg-sub-raw ::subscribe
   (fn [db [_ query initial reducer]]

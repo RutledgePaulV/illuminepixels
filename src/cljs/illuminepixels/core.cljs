@@ -17,10 +17,11 @@
     (println "dev mode")))
 
 (defn top-panel []
-  (let [ready? (rf/subscribe [::subs/initialised?])]
+  (let [ready? (rf/subscribe [::subs/initialised?])
+        route  (rf/subscribe [::subs/active-route])]
     (if-not @ready?
       [:div "Initialising ..."]
-      [views/main-panel])))
+      [views/main-panel @route])))
 
 (defn mount-root []
   (rf/clear-subscription-cache!)
