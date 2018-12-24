@@ -36,3 +36,14 @@
     (if (strings/blank? port)
       (str proto "://" host path)
       (str proto "://" host ":" port path))))
+
+
+(defn parse-date [s]
+  (js/Date. (.parse js/Date s)))
+
+(defn format-date [date]
+  (cond
+    (number? date) (format-date (js/Date date))
+    (string? date) (format-date (parse-date date))
+    (instance? js/Date date) (.toLocaleDateString date)
+    :otherwise (str date)))

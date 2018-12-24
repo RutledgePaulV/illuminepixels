@@ -2,7 +2,8 @@
   (:require
     [re-frame.core :as rf]
     [illuminepixels.subs :as subs]
-    [illuminepixels.routes :as routes]))
+    [illuminepixels.routes :as routes]
+    [illuminepixels.utils :as utils]))
 
 
 ;; home
@@ -36,12 +37,20 @@
   [:div [:h1 "This is the home page."]])
 
 (defn blogs-panel []
-  [:div
-   (let [blogs (rf/subscribe [::subs/blogs])]
-     (for [{{:keys [slug title summary]} :metadata} @blogs]
-       [:div {:key slug}
-        [:a {:href (routes/view->path :blog-panel {:slug slug})} [:h3 title]]
-        [:p summary]]))])
+  (let [blogs @(rf/subscribe [::subs/blogs])]
+    [:section
+     [:div.row
+      (mapcat identity
+        (for [{{:keys [slug title summary created]} :metadata} blogs]
+          (let [timestamp (get created :timestamp)]
+            [[:div.col.col-md-1]
+             [:div.col.col-md-4 {:key slug}
+              [:div.card
+               [:h3.card-title
+                [:a {:href (routes/view->path :blog-panel {:slug slug})} title]
+                [:span {:style {:float "right"}} (utils/format-date timestamp)]]
+               summary]]
+             [:div.col.col-md-1]])))]]))
 
 (defn games-panel []
   [:div [:h1 "This is the games page."]])
@@ -51,7 +60,7 @@
 
 (defn blog-panel [slug]
   (let [blog @(rf/subscribe [::subs/blog slug])]
-    [:div (:html blog)]))
+    [:section (:html blog)]))
 
 (defn game-panel [slug]
   (let [game @(rf/subscribe [::subs/game slug])]
