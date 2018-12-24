@@ -9,7 +9,8 @@
   (fn [db _] (get-in db [:active-route])))
 
 (rf/reg-sub ::initialised?
-  (fn [db _] (contains? db :websocket)))
+  (fn [db _] (and (contains? db :websocket)
+                  (contains? db :active-route))))
 
 (rf/reg-sub ::blogs
   :<- [::subscribe {:kind :blog}]

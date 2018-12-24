@@ -11,4 +11,5 @@
 
   (resources "/")
 
-  (ANY "/**" [] (response/not-found "Not found.")))
+  (ANY "/**" []
+    (response/resource-response "index.html" {:root "public"})))

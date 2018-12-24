@@ -1,5 +1,5 @@
 Title: Websockets Galore
-Slug: websockets-gakore
+Slug: websockets-galore
 Summary: Byte Me
 
 ### Websockets Galore
