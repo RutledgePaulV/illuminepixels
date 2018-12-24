@@ -2,4 +2,4 @@
   (:require [garden.def :refer [defstyles]]))
 
 (defstyles screen
-  [:body {:color "red"}])
+  [:ul.nav-links [:a {:padding-top "25px"}]])

@@ -24,21 +24,22 @@
             [:a {:href "#/about"} [:h6 "about"]])]]]])
 
 (defn home-panel []
-  )
+  [:div [:h1 "This is the home page."]])
 
 (defn blog-panel []
-  (let [blogs (rf/subscribe [::subs/subscribe {:kind :blog}])]
-    (for [entry @blogs]
-      [:div {:key (str (random-uuid))}
-       [:h2 (get-in entry [:metadata :title])]
-       [:h3 (get-in entry [:metadata :created :author :name])]
-       (:html entry)])))
+  [:div
+   (let [blogs (rf/subscribe [::subs/subscribe {:kind :blog}])]
+     (for [entry @blogs]
+       [:div {:key (str (get-in entry [:metadata :created :timestamp]))}
+        [:h2 (get-in entry [:metadata :title])]
+        [:h3 (get-in entry [:metadata :created :author :name])]
+        (:html entry)]))])
 
 (defn game-panel []
   [:div [:h1 "This is the games page."]])
 
 (defn about-panel []
-  [:div [:h1 "This is the games page."]])
+  [:div [:h1 "This is the about page."]])
 
 
 ;; main
