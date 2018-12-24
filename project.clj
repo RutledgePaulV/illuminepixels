@@ -16,51 +16,52 @@
                  [re-frame "0.10.6"]
                  [cljsjs/react "16.6.0-0"]
                  [cljsjs/react-dom "16.6.0-0"]
+                 [reagent "0.8.1" :exclusions [cljsjs/react cljsjs/react-dom]]
+                 [re-frame "0.10.6" :exclusions [cljsjs/react cljsjs/react-dom]]
                  [markdown-clj "1.0.5"]
                  [hickory "0.7.1"]
                  [clj-jgit "0.8.10"]
-                 [reagent "0.8.1" :exclusions [cljsjs/react cljsjs/react-dom]]
-                 [re-frame "0.10.6" :exclusions [cljsjs/react cljsjs/react-dom]]
                  [secretary "1.2.3"]
                  [garden "1.3.6"]
                  [ns-tracker "0.3.1"]
                  [compojure "1.6.1"]
                  [haslett "0.1.2"]]
 
-  :plugins [[lein-cljsbuild "1.1.7"] [lein-garden "0.2.8"]]
+  :plugins [[lein-cljsbuild "1.1.7"] [lein-garden "0.3.0"]]
 
   :source-paths ["src/clj" "src/cljc" "src/cljs"]
 
   :main illuminepixels.core
 
   :clean-targets ^{:protect false} ["resources/public/js/compiled"
-                                    "target"
-                                    "resources/public/css"
-                                    "test/js"]
+                                    "resources/public/css/compiled"
+                                    "target"]
 
   :figwheel {:css-dirs ["resources/public/css"]}
 
-  :garden {:builds [{:id           "screen"
-                     :source-paths ["src/clj"]
-                     :stylesheet   illuminepixels.css/screen
-                     :compiler     {:output-to     "resources/public/css/screen.css"
-                                    :pretty-print? true}}]}
+  :garden
+  {:builds
+   [{:id           "screen"
+     :source-paths ["src/clj"]
+     :stylesheet   illuminepixels.css/screen
+     :compiler     {:output-to     "resources/public/css/compiled/screen.css"
+                    :pretty-print? true}}]}
 
   :profiles
-  {:dev     {:dependencies [[binaryage/devtools "0.9.10"]
-                            [day8.re-frame/re-frame-10x "0.3.6-react16"]
-                            [day8.re-frame/tracing "0.5.1"]
-                            [cider/piggieback "0.3.10"]
-                            [figwheel-sidecar "0.5.18"]]
+  {:dev
+   {:dependencies [[binaryage/devtools "0.9.10"]
+                   [day8.re-frame/re-frame-10x "0.3.6-react16"]
+                   [day8.re-frame/tracing "0.5.1"]
+                   [cider/piggieback "0.3.10"]
+                   [figwheel-sidecar "0.5.18"]]
 
-             :repl-options {:nrepl-middleware [cider.piggieback/wrap-cljs-repl]}}
+    :repl-options {:nrepl-middleware [cider.piggieback/wrap-cljs-repl]}}
 
-   :uberjar {:dependencies [[day8.re-frame/tracing-stubs "0.5.1"]]
-             :omit-source  true
-             :main         illuminepixels.core
-             :aot          [illuminepixels.core]
-             :uberjar-name "illuminepixels.jar"
-             :prep-tasks   ["compile" ["cljsbuild" "once" "min"] ["garden" "once"]]}}
+   :stubs
+   {:dependencies [[day8.re-frame/tracing-stubs "0.5.1"]]}
+
+   :build
+   [:stubs {:prep-tasks ["compile" ["cljsbuild" "once" "min"] ["garden" "once"]]}]}
 
   :cljsbuild
   {:builds

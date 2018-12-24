@@ -1,5 +1,6 @@
 (ns illuminepixels.utils
-  (:require [missing.core :as miss])
+  (:require [missing.core :as miss]
+            [clojure.core.async :as async])
   (:import (java.util UUID)))
 
 (def default-settings
@@ -25,3 +26,31 @@
       (when (and (and (not old-state) new-state))
         (miss/quietly (f)))))
   chan)
+
+(defmacro polling [timeout & body]
+  `(let [chan# (async/chan)
+         func# (fn [] ~@body)
+         freq# ~timeout]
+     (async/go-loop [prev# ::impossible]
+       (let [result# (func#)]
+         (if (not= result# prev#)
+           (when (async/>! chan# result#)
+             (async/<! (async/timeout freq#))
+             (recur result#))
+           (do (async/<! (async/timeout freq#))
+               (recur result#)))))
+     chan#))
+
+(defmacro polling-blocking [timeout & body]
+  `(let [chan# (async/chan)
+         func# (fn [] ~@body)
+         freq# ~timeout]
+     (async/go-loop [prev# ::impossible]
+       (let [result# (async/<! (async/thread (func#)))]
+         (if (not= result# prev#)
+           (when (async/>! chan# result#)
+             (async/<! (async/timeout freq#))
+             (recur result#))
+           (do (async/<! (async/timeout freq#))
+               (recur result#)))))
+     chan#))

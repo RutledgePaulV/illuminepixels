@@ -1,7 +1,6 @@
-(ns illuminepixels.features.introspect
+(ns illuminepixels.introspect
   (:require [clj-jgit.porcelain :as jgit]
-            [missing.core :as miss]
-            [clojure.java.io :as io])
+            [missing.core :as miss])
   (:import (org.eclipse.jgit.revwalk RevCommit)
            (org.eclipse.jgit.lib Constants PersonIdent)
            (org.eclipse.jgit.treewalk TreeWalk)
@@ -30,7 +29,7 @@
   {:created  (select-keys (first commits) [:commit :timestamp :message :author])
    :modified (select-keys (last commits) [:commit :timestamp :message :author])})
 
-(defn summarize-files []
+(defn summarize-project []
   (let [repo (jgit/load-repo ".")]
     (->>
       (jgit/git-log repo)

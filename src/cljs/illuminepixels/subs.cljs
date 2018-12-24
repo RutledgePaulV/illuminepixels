@@ -33,11 +33,7 @@
               (rf/dispatch
                 [::events/update-in
                  [:subscriptions new-transaction]
-                 (fn [current]
-                   (reduce (or reducer (fn [_ x] x))
-                           (or current initial)
-                           (let [data (get event :data)]
-                             (if (vector? data) data [data]))))])
+                 #((or reducer (fn [_ x] x)) (or % initial) (get event :data))])
               (recur)))
           (async/put! sink (command {:data query}))
           (ratom/make-reaction

@@ -28,5 +28,11 @@
   (defroute "/about" []
     (rf/dispatch [::events/assoc-in [:active-panel] :about-panel]))
 
+  (defroute "/blog" []
+    (rf/dispatch [::events/assoc-in [:active-panel] :blog-panel]))
+
+  (defroute "/games" []
+    (rf/dispatch [::events/assoc-in [:active-panel] :game-panel]))
+
   ;; --------------------
   (hook-browser-navigation!))
