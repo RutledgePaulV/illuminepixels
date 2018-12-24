@@ -6,13 +6,22 @@
 
 ;; home
 
+(defn navigation []
+  [:nav
+   [:div.nav-container
+    [:div.nav-logo
+     [:a.active {:href "#/"} "home"]]
+    [:ul.nav-links
+     [:li
+      [:a {:href "#/games"} [:h6 "games"]]]
+     [:li
+      [:a {:href "#/blog"} [:h6 "blog"]]]
+     [:li
+      [:a {:href "#/about"} [:h6 "about"]]]]]])
+
 (defn home-panel []
-  (let [name (rf/subscribe [::subs/subscribe {:kind :ping :millis 50}])]
-    [:div
-     [:h1 (str "Hello from " @name ". This is the Home Page.")]
-     [:div
-      [:a {:href "#/about"}
-       "go to About Page"]]]))
+  [:div
+   [navigation]])
 
 
 ;; about
