@@ -37,6 +37,8 @@
       (str proto "://" host path)
       (str proto "://" host ":" port path))))
 
+(defn eq [& ks]
+  (apply = (map name ks)))
 
 (defn parse-date [s]
   (js/Date. (.parse js/Date s)))

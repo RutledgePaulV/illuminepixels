@@ -10,7 +10,7 @@
             [illuminepixels.introspect :as intro])
   (:import (java.io File)))
 
-(defn is-blog-post? [^File file]
+(defn is-markdown? [^File file]
   (and (.isFile file) (string/ends-with? (.getName file) ".md")))
 
 (defn html->hiccup [html]
@@ -34,17 +34,19 @@
   (let [prefix (str (.getAbsolutePath (io/file "")) "/")]
     (strings/replace (.getAbsolutePath file) prefix "")))
 
-(defn get-blog-posts []
+(defn read-markdowns [dir]
   (let [introspection (intro/summarize-project)]
-    (->> (io/resource "posts")
+    (->> (io/resource dir)
          (io/file)
          (file-seq)
-         (filter is-blog-post?)
+         (filter is-markdown?)
          (map (juxt (comp introspection get-relative-path) identity))
-         (filter (comp some? first))
          (mapv (fn [[k v]]
                  (let [data (markdown->data (slurp v))]
-                   (update data :metadata merge k)))))))
+                   (update data :metadata merge (or k {}))))))))
 
-(defmethod api/handle-subscribe :blog [data]
-  (utils/polling 1000 (get-blog-posts)))
+(defmethod api/handle-subscribe :blogs [data]
+  (utils/polling 1000 (read-markdowns "posts")))
+
+(defmethod api/handle-subscribe :about [data]
+  (utils/polling 1000 (first (read-markdowns "about"))))

@@ -29,28 +29,15 @@
 
 (defmacro polling [timeout & body]
   `(let [chan# (async/chan)
+         shut# (async/promise-chan)
          func# (fn [] ~@body)
          freq# ~timeout]
+     (on-close chan# (fn [] (async/put! shut# ::close)))
      (async/go-loop [prev# ::impossible]
        (let [result# (func#)]
-         (if (not= result# prev#)
-           (when (async/>! chan# result#)
-             (async/<! (async/timeout freq#))
-             (recur result#))
-           (do (async/<! (async/timeout freq#))
-               (recur result#)))))
-     chan#))
-
-(defmacro polling-blocking [timeout & body]
-  `(let [chan# (async/chan)
-         func# (fn [] ~@body)
-         freq# ~timeout]
-     (async/go-loop [prev# ::impossible]
-       (let [result# (async/<! (async/thread (func#)))]
-         (if (not= result# prev#)
-           (when (async/>! chan# result#)
-             (async/<! (async/timeout freq#))
-             (recur result#))
-           (do (async/<! (async/timeout freq#))
-               (recur result#)))))
+         (when (not= result# prev#)
+           (async/>! chan# result#))
+         (async/<! (async/timeout freq#))
+         (when-not (= ::close (async/poll! shut#))
+           (recur result#))))
      chan#))

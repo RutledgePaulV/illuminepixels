@@ -3,7 +3,8 @@
     [re-frame.core :as rf]
     [cljs.core.async :as async]
     [reagent.ratom :as ratom]
-    [illuminepixels.events :as events]))
+    [illuminepixels.events :as events]
+    [illuminepixels.utils :as utils]))
 
 (rf/reg-sub ::active-route
   (fn [db _] (get-in db [:active-route])))
@@ -12,15 +13,21 @@
   (fn [db _] (and (contains? db :websocket)
                   (contains? db :active-route))))
 
-(rf/reg-sub ::blogs
-  :<- [::subscribe {:kind :blog}]
-  (fn [blogs] blogs))
+(rf/reg-sub ::blogs :<- [::subscribe {:kind :blogs}] identity)
+(rf/reg-sub ::games :<- [::subscribe {:kind :games}] identity)
+(rf/reg-sub ::about :<- [::subscribe {:kind :about}] identity)
 
 (rf/reg-sub ::blog
   :<- [::blogs]
   (fn [blogs [_ slug]]
-    (letfn [(it? [blog] (= slug (get-in blog [:metadata :slug])))]
+    (letfn [(it? [blog] (utils/eq slug (get-in blog [:metadata :slug])))]
       (first (drop-while (complement it?) blogs)))))
+
+(rf/reg-sub ::game
+  :<- [::games]
+  (fn [games [_ slug]]
+    (letfn [(it? [game] (utils/eq slug (get-in game [:slug])))]
+      (first (drop-while (complement it?) games)))))
 
 (rf/reg-sub-raw ::subscribe
   (fn [db [_ query initial reducer]]

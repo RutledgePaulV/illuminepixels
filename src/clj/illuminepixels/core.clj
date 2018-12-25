@@ -8,7 +8,7 @@
   (:gen-class))
 
 
-(mount/defstate server
+(mount/defstate ^{:on-reload :noop} server
   :start
   (sock/server
     (utils/get-ring-settings))
