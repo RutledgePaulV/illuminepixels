@@ -4,6 +4,7 @@
     [illuminepixels.subs :as subs]
     [illuminepixels.routes :as routes]
     [illuminepixels.utils :as utils]
+    [illuminepixels.components :as com]
     [clojure.string :as string]))
 
 
@@ -68,15 +69,15 @@
 (defn blogs-panel []
   (let [blogs @(rf/subscribe [::subs/blogs])]
     [:section
-     [:div.row
-      (for [{{:keys [slug title summary created]} :metadata} blogs]
-        (let [timestamp (get created :timestamp)]
-          [:div.col.col-md-6 {:key slug}
+     (for [{{:keys [slug title summary created]} :metadata} blogs]
+       (let [timestamp (get created :timestamp)]
+         [:div.row {:key slug}
+          [:div.col.col-md-8.col-md-offset-2
            [:div.card
             [:h3.card-title
              [:a {:href (routes/view->path :blog-panel {:slug slug})} title]
              [:span {:style {:float "right"}} (utils/format-date timestamp)]]
-            summary]]))]]))
+            summary]]]))]))
 
 (defn games-panel []
   (let [games @(rf/subscribe [::subs/games])]
@@ -104,7 +105,14 @@
 
 (defn blog-panel [slug]
   (let [blog @(rf/subscribe [::subs/blog slug])]
-    [:section (:html blog)]))
+    [:div.row
+     [:div.col.col-md-8.col-md-offset-2
+      [:div.panel
+       [:div.panel-body
+        [:section [com/walk-code-snippets (:html blog)]]]
+       [:div.panel-footer
+        [:div {:style {:float "right"}} [peer-display]]
+        [:div [:span "┻━┻ ︵\uFEFF ¯\\(ツ)/¯ ︵ ┻━┻"]]]]]]))
 
 (defn game-panel [slug]
   (let [{:keys [name description]} @(rf/subscribe [::subs/game slug])]

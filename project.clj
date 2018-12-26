@@ -17,6 +17,7 @@
                  [re-frame "0.10.6"]
                  [cljsjs/react "16.6.0-0"]
                  [cljsjs/react-dom "16.6.0-0"]
+                 [venantius/glow "0.1.5"]
                  [reagent "0.8.1" :exclusions [cljsjs/react cljsjs/react-dom]]
                  [re-frame "0.10.6" :exclusions [cljsjs/react cljsjs/react-dom]]
                  [markdown-clj "1.0.5"]
@@ -25,7 +26,6 @@
                  [metosin/reitit-core "0.2.9"]
                  [metosin/reitit-schema "0.2.9"]
                  [metosin/reitit-frontend "0.2.9"]
-                 [quil "2.8.0"]
                  [garden "1.3.6"]
                  [ns-tracker "0.3.1"]
                  [compojure "1.6.1"]
@@ -75,7 +75,7 @@
      :compiler     {:main                 illuminepixels.core
                     :output-to            "resources/public/js/compiled/app.js"
                     :output-dir           "resources/public/js/compiled/out"
-                    :asset-path           "js/compiled/out"
+                    :asset-path           "/js/compiled/out"
                     :source-map-timestamp true
                     :infer-externs        true
                     :preloads             [devtools.preload day8.re-frame-10x.preload]
