@@ -1,13 +1,12 @@
 (ns illuminepixels.features.games
-  (:require [illuminepixels.games.snake :as snake]
-            [illuminepixels.network.api :as api]
+  (:require [illuminepixels.network.api :as api]
             [illuminepixels.utils :as utils]
             [clojure.core.async :as async]))
 
 (defn games []
-  [{:name        "Snake"
-    :slug        :snake
-    :description "Chase each other around in real time."}])
+  [{:name        "Othello"
+    :slug        :othello
+    :description "Play others at the game othello."}])
 
 
 (defmethod api/handle-subscribe :games [data]

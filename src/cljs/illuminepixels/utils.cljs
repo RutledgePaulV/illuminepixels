@@ -10,6 +10,9 @@
       m)
     (dissoc m k)))
 
+(defn index-by [f coll]
+  (into {} (map (juxt f identity) coll)))
+
 (defn deep-merge [& maps]
   (letfn [(inner-merge [& maps]
             (let [ms (remove nil? maps)]

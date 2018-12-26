@@ -33,8 +33,37 @@
              [:a.active {:key target :href target} [:h6 v]]
              [:a {:key target :href target} [:h6 v]])))]]]))
 
+
+(defn peer-display []
+  (let [{:keys [path]} @(rf/subscribe [::subs/active-route])
+        {:keys [peers]} @(rf/subscribe [::subs/subscribe {:kind :peers :route path}])]
+    [:span (str peers " " (if (> peers 1) "viewers" "viewer"))]))
+
 (defn home-panel []
-  [:div [:h1 "This is the home page."]])
+  [:div.row
+   [:div.col.col-md-6.col-md-offset-3
+    [:div.panel
+     [:div.panel-body
+      [:div.row
+       [:div.col.col-md-6
+        [:div.panel
+         [:div.panel-body
+          [:div
+           [:h6 [:em "Illumine"]]
+           [:p "To enlighten intellectually or spiritually; enable to understand"]]]]]
+       [:div.col.col-md-6
+        [:div.panel
+         [:div.panel-body
+          [:div
+           [:h6 [:em "Pixels"]]
+           [:p "An atomic element of display"]]]]]]
+      [:section
+       [:p {:style {:text-align "center"}} "This is a playground and technical blog brought to you by "
+        [:a {:href (routes/view->path :about-panel)} "Paul Rutledge"]
+        "."]]]
+     [:div.panel-footer
+      [:div {:style {:float "right"}} [peer-display]]
+      [:div [:span "(ノಠ益ಠ)ノ彡┻━┻"]]]]]])
 
 (defn blogs-panel []
   (let [blogs @(rf/subscribe [::subs/blogs])]
@@ -65,10 +94,13 @@
     [:div.row
      [:div.col.col-md-6.col-md-offset-3
       [:div.panel
-       [:div.panel-head [:h2.panel-title "About"]]
        [:div.panel-body (:html about)]
        [:div.panel-footer
-        [:span [:a {:href "https://github.com/RutledgePaulV" :target "_blank"} "Github"]]]]]]))
+        [:div {:style {:float "right"}} [peer-display]]
+        [:div
+         [:a {:href "https://github.com/RutledgePaulV" :target "_blank"} "Github"]
+         [:span "  /  "]
+         [:a {:href "https://github.com/RutledgePaulV" :target "_blank"} "LinkedIn"]]]]]]))
 
 (defn blog-panel [slug]
   (let [blog @(rf/subscribe [::subs/blog slug])]
