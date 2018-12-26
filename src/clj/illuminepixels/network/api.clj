@@ -45,7 +45,8 @@
   (fn [k r o n]
     (when (not= o n)
       (doseq [[route subscriptions] n sub subscriptions]
-        (async/put! sub {:peers (count subscriptions)})))))
+        (when (not= (count subscriptions) (count (get o route #{})))
+          (async/put! sub {:peers (count subscriptions)}))))))
 
 (defmethod handle-subscribe :peers [{:keys [route millis] :or {millis 1000}}]
   (let [response (async/chan)]

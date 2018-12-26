@@ -54,4 +54,4 @@ browser subscribes and unsubscribe to various topics. On the server subscription
 as a docker container on a [digital ocean](https://www.digitalocean.com/) server and proxied by 
 [caddy](https://caddyserver.com/) with automatic certificate renewal.
 
-Isn't that all overkill for a profile site? [Perhaps](https://www.youtube.com/watch?v=KwIo9Y9iJ6A).
+Isn't that overkill for a profile site? [Perhaps](https://www.youtube.com/watch?v=KwIo9Y9iJ6A).
