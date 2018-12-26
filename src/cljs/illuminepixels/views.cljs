@@ -45,13 +45,13 @@
     [:div.panel
      [:div.panel-body
       [:div.row
-       [:div.col.col-md-6
+       [:div.col.col-md-8
         [:div.panel
          [:div.panel-body
           [:div
            [:h6 [:em "Illumine"]]
            [:p "To enlighten intellectually or spiritually; enable to understand"]]]]]
-       [:div.col.col-md-6
+       [:div.col.col-md-4
         [:div.panel
          [:div.panel-body
           [:div
