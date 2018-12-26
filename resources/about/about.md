@@ -19,7 +19,7 @@ ___
 
 I've lead orchestra sections, karate classes, resident assistants, and software teams. 
 
-I choose to lead by doing, teaching, and inspiring. I have no interest in tasking and tab keeping.
+I choose to lead primarily by doing, teaching, and inspiring. I have little interest in tasking and tab keeping.
 
 - Led transition from monolithic to SOA architecture
 - Led transition from customer specific development to configurable multi-tenant SaaS
@@ -30,6 +30,7 @@ I choose to lead by doing, teaching, and inspiring. I have no interest in taskin
 
 These are some of the individual contributor works I'm most proud of.
 
+- Wrote type safe database agnostic query builders
 - Wrote a predicate expression language grammar and compilers
 - Created an NGINX security module for accessing S3 files via signed links
 - Implemented a periodic backup / cleanup process with per-customer live restoration
