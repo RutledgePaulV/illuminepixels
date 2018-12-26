@@ -39,9 +39,14 @@
       form)
     nil
     (catch ExceptionInfo e
-      (if-some [stone (::stone (ex-data e))]
-        stone
+      (if-some [[_ value] (find (ex-data e) ::stone)]
+        value
         (throw e)))))
+
+(defmacro once [& body]
+  `(let [chan# (async/chan)]
+     (async/put! chan# (do ~@body))
+     chan#))
 
 (defmacro polling [timeout & body]
   `(let [chan# (async/chan)

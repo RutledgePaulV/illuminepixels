@@ -1,8 +1,9 @@
 (ns illuminepixels.core
   (:require [illuminepixels.network.socket :as sock]
             [illuminepixels.utils :as utils]
-            [illuminepixels.features.blog :as blog]
+            [illuminepixels.features.peers :as peers]
             [illuminepixels.features.games :as games]
+            [illuminepixels.features.blog :as blog]
             [mount.core :as mount])
   (:import (org.eclipse.jetty.server Server))
   (:gen-class))

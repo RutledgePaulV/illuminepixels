@@ -1,7 +1,6 @@
 (ns illuminepixels.features.games
   (:require [illuminepixels.network.api :as api]
-            [illuminepixels.utils :as utils]
-            [clojure.core.async :as async]))
+            [illuminepixels.utils :as utils]))
 
 (defn games []
   [{:name        "Othello"
@@ -10,6 +9,4 @@
 
 
 (defmethod api/handle-subscribe :games [data]
-  (let [chan (async/chan 1)]
-    (async/>!! chan (games))
-    chan))
+  (utils/once (games)))
