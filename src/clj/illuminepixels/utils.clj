@@ -1,7 +1,9 @@
 (ns illuminepixels.utils
   (:require [missing.core :as miss]
-            [clojure.core.async :as async])
-  (:import (java.util UUID)))
+            [clojure.core.async :as async]
+            [clojure.walk :as walk])
+  (:import (java.util UUID)
+           (clojure.lang ExceptionInfo)))
 
 (def default-settings
   {:ring
@@ -27,6 +29,20 @@
         (miss/quietly (f)))))
   chan)
 
+(defn search [pred form]
+  (try
+    (walk/postwalk
+      (fn [form]
+        (if (pred form)
+          (throw (ex-info "" {::stone form}))
+          form))
+      form)
+    nil
+    (catch ExceptionInfo e
+      (if-some [stone (::stone (ex-data e))]
+        stone
+        (throw e)))))
+
 (defmacro polling [timeout & body]
   `(let [chan# (async/chan)
          shut# (async/promise-chan)
@@ -34,7 +50,7 @@
          freq# ~timeout]
      (on-close chan# (fn [] (async/put! shut# ::close)))
      (async/go-loop [prev# ::impossible]
-       (let [result# (func#)]
+       (let [result# (async/<! (async/thread (func#)))]
          (when (not= result# prev#)
            (async/>! chan# result#))
          (async/<! (async/timeout freq#))

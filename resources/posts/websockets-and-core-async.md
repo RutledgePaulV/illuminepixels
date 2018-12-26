@@ -9,4 +9,7 @@ This is some sample content.
 
 ```
 (async/>! ws {:response :excellent})
+
+(defn nest [] 
+  (+ 1 2 3 4))
 ```

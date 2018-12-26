@@ -4,7 +4,6 @@
     [illuminepixels.subs :as subs]
     [illuminepixels.routes :as routes]
     [illuminepixels.utils :as utils]
-    [illuminepixels.components :as com]
     [clojure.string :as string]))
 
 
@@ -101,7 +100,7 @@
         [:div
          [:a {:href "https://github.com/RutledgePaulV" :target "_blank"} "Github"]
          [:span "  /  "]
-         [:a {:href "https://github.com/RutledgePaulV" :target "_blank"} "LinkedIn"]]]]]]))
+         [:a {:href "https://www.linkedin.com/in/rutledgepaulv" :target "_blank"} "Linkedin"]]]]]]))
 
 (defn blog-panel [slug]
   (let [blog @(rf/subscribe [::subs/blog slug])]
@@ -109,7 +108,7 @@
      [:div.col.col-md-8.col-md-offset-2
       [:div.panel
        [:div.panel-body
-        [:section [com/walk-code-snippets (:html blog)]]]
+        [:section (:html blog)]]
        [:div.panel-footer
         [:div {:style {:float "right"}} [peer-display]]
         [:div [:span "┻━┻ ︵\uFEFF ¯\\(ツ)/¯ ︵ ┻━┻"]]]]]]))
