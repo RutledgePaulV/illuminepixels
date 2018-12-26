@@ -17,8 +17,16 @@
 (defn is-markdown? [^File file]
   (and (.isFile file) (string/ends-with? (.getName file) ".md")))
 
+(defn unescape-html [s]
+  (let [replacements {"&amp;" "&" "&lt;" "<" "&gt;" ">" "&quot;" "\""}]
+    (reduce-kv string/replace s replacements)))
+
+(defn unescape-hiccup [hiccup]
+  (walk/postwalk (fn [form] (if (string? form) (unescape-html form) form)) hiccup))
+
 (defn html->hiccup [html]
-  (vec (concat [:div] (drop 2 (-> html hick/parse hick/as-hiccup first (nth 3))))))
+  (->> (vec (concat [:div] (drop 2 (-> html hick/parse hick/as-hiccup first (nth 3)))))
+       (unescape-hiccup)))
 
 (defn markdown->data [markdown]
   (let [{:keys [metadata html]}

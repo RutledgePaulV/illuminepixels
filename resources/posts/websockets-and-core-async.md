@@ -8,5 +8,5 @@ This is some sample content.
 
 
 ```
-(async/>! chan {:response :excellent})
+(async/>! ws {:response :excellent})
 ```
