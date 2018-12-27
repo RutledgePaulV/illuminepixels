@@ -7,7 +7,7 @@ of instances and started to prefer programming over video games.
 
 Since then I went to college for Mathematics and Computer Science; discovered a proclivity for architecture, devops, and security; fell in love with 
 functional programming; taught myself Clojure; taught my team Clojure; and built a successful multi-tenant
-SOA product platform from the ground up with Clojure and Kubernetes. These days I continue
+microservice product platform from the ground up with Clojure and Kubernetes. These days I continue
 to lead the technical efforts while mentoring others as we scale our team and products to meet
 the demands of *real customers*.
 
@@ -21,7 +21,7 @@ I've lead orchestra sections, karate classes, resident assistants, and software 
 
 I choose to lead primarily by doing, teaching, and inspiring. I have little interest in tasking and tab keeping.
 
-- Led transition from monolithic to SOA architecture
+- Led transition from monolithic to microservice architecture
 - Led transition from customer specific development to configurable multi-tenant SaaS
 - I identified Clojure as an important technology and led a successful adoption in 2016
 - I identified Kubernetes as an important technology and led a successful adoption in 2015

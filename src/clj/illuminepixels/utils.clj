@@ -56,7 +56,7 @@
      (on-close chan# (fn [] (async/put! shut# ::close)))
      (async/go-loop [prev# ::impossible]
        (let [result# (async/<! (async/thread (func#)))]
-         (when (not= result# prev#)
+         (when (and (some? result#) (not= result# prev#))
            (async/>! chan# result#))
          (async/<! (async/timeout freq#))
          (when-not (= ::close (async/poll! shut#))
