@@ -4,8 +4,7 @@
             [clojure.walk :as walk]
             [hickory.core :as hick]
             [clojure.string :as string]
-            [glow.core :as glow]
-            [illuminepixels.utils :as utils]))
+            [glow.core :as glow]))
 
 (defn unescape-html [s]
   (let [replacements {"&amp;" "&" "&lt;" "<" "&gt;" ">" "&quot;" "\""}]
@@ -54,7 +53,7 @@
        (= :code (first (inner hiccup)))))
 
 (defn extract-code [hiccup]
-  (inner (utils/search (partial tag? :code) hiccup)))
+  (inner (miss/dfs-postorder (partial tag? :code) hiccup)))
 
 (defn reformat-code [html]
   (walk/postwalk

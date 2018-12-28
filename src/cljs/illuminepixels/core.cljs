@@ -5,16 +5,9 @@
     [illuminepixels.events :as events]
     [illuminepixels.routes :as routes]
     [illuminepixels.views :as views]
-    [illuminepixels.config :as config]
     [illuminepixels.subs :as subs]
     [illuminepixels.utils :as utils]
     [illuminepixels.cofx :as cofx]))
-
-
-(defn dev-setup []
-  (when config/debug?
-    (enable-console-print!)
-    (println "dev mode")))
 
 (defn top-panel []
   (let [ready? (rf/subscribe [::subs/initialised?])
@@ -33,7 +26,7 @@
   (rf/dispatch-sync [::events/websocket-connect {:url (utils/websocket-url)}]))
 
 (defn ^:export init []
-  (dev-setup)
-  (routes/app-routes)
+  (enable-console-print!)
+  (routes/restart-router!)
   (initial-events)
   (mount-root))

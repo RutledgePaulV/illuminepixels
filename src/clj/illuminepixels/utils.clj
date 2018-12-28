@@ -1,9 +1,7 @@
 (ns illuminepixels.utils
   (:require [missing.core :as miss]
-            [clojure.core.async :as async]
-            [clojure.walk :as walk])
-  (:import (java.util UUID)
-           (clojure.lang ExceptionInfo)))
+            [clojure.core.async :as async])
+  (:import (java.util UUID)))
 
 (def default-settings
   {:ring
@@ -28,20 +26,6 @@
       (when (and (and (not old-state) new-state))
         (miss/quietly (f)))))
   chan)
-
-(defn search [pred form]
-  (try
-    (walk/postwalk
-      (fn [form]
-        (if (pred form)
-          (throw (ex-info "" {::stone form}))
-          form))
-      form)
-    nil
-    (catch ExceptionInfo e
-      (if-some [[_ value] (find (ex-data e) ::stone)]
-        value
-        (throw e)))))
 
 (defmacro once [& body]
   `(let [chan# (async/chan)]
