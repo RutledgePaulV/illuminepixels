@@ -4,7 +4,8 @@
     [illuminepixels.subs :as subs]
     [illuminepixels.routes :as routes]
     [illuminepixels.utils :as utils]
-    [clojure.string :as string]))
+    [clojure.string :as string]
+    [illuminepixels.sketchy :as sketchy]))
 
 
 (defn corner []
@@ -78,17 +79,6 @@
              [:span {:style {:float "right"}} (utils/format-date timestamp)]]
             summary]]]))]))
 
-(defn games-panel []
-  (let [games @(rf/subscribe [::subs/games])]
-    [:section
-     (for [{:keys [name slug description]} games]
-       [:div.row {:key slug}
-        [:div.col.col-md-6.col-md-offset-3
-         [:div.card
-          [:h3.card-title
-           [:a {:href (routes/view->path :game-panel {:slug slug})} name]]
-          description]]])]))
-
 (defn about-panel []
   (let [about @(rf/subscribe [::subs/about])]
     [:div.row
@@ -113,9 +103,40 @@
         [:div {:style {:float "right"}} [peer-display]]
         [:div [:span "┻━┻ ︵\uFEFF ¯\\(ツ)/¯ ︵ ┻━┻"]]]]]]))
 
+(defn canvas [id]
+  [:canvas {:id id}])
+
+(defn sketch [sketch]
+  [(with-meta
+     canvas
+     {:component-did-mount
+      (fn [component] (sketch))
+      :component-will-unmount
+      (fn [component])})
+   (-> sketch meta :name)])
+
 (defn game-panel [slug]
-  (let [{:keys [name description]} @(rf/subscribe [::subs/game slug])]
-    [:div name]))
+  (let [command {:kind slug}
+        sketchy (sketchy/make-sketch command)]
+    [:div.row
+     [:div.col.col-md-8.col-md-offset-2
+      [:div.panel
+       [:div.panel-body
+        [:section {:style {:text-align "center"}} [sketch sketchy]]]
+       [:div.panel-footer
+        [:div {:style {:float "right"}} [peer-display]]
+        [:div [:span "┬─┬ノ( º _ ºノ)"]]]]]]))
+
+(defn games-panel []
+  (let [games [{:name "Circles" :slug :circles :description "A game of pi."}]]
+    [:section
+     (for [{:keys [name slug description]} games]
+       [:div.row {:key slug}
+        [:div.col.col-md-6.col-md-offset-3
+         [:div.card
+          [:h3.card-title
+           [:a {:href (routes/view->path :game-panel {:slug slug})} name]]
+          description]]])]))
 
 
 (defn main-panel [{:keys [name path-params]}]

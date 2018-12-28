@@ -13,7 +13,6 @@
   (fn [db _] (and (contains? db :websocket) (contains? db :active-route))))
 
 (rf/reg-sub ::blogs :<- [::subscribe {:kind :blogs}] identity)
-(rf/reg-sub ::games :<- [::subscribe {:kind :games}] identity)
 (rf/reg-sub ::about :<- [::subscribe {:kind :about}] identity)
 
 (rf/reg-sub ::blog
@@ -21,13 +20,6 @@
   (fn [blogs [_ slug]]
     (let [key-fn  #(name (get-in % [:metadata :slug]))
           indexed (utils/index-by key-fn blogs)]
-      (get indexed (name slug)))))
-
-(rf/reg-sub ::game
-  :<- [::games]
-  (fn [games [_ slug]]
-    (let [key-fn  #(name (get-in % [:slug]))
-          indexed (utils/index-by key-fn games)]
       (get indexed (name slug)))))
 
 (rf/reg-sub-raw ::subscribe

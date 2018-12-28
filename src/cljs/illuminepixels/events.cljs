@@ -40,6 +40,11 @@
   (fn-traced [db [_ data]]
     (dissoc db :websocket :requests :subscriptions)))
 
+(rf/reg-event-fx
+  ::websocket-message
+  (fn-traced [{:keys [db]} [_ data]]
+    {:ws-message {:sink (get-in db [:websocket :sink]) :message data}}))
+
 (rf/reg-event-db
   ::route-change
   (fn-traced [db [_ {{name :name} :data

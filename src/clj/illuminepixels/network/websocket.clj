@@ -67,7 +67,7 @@
                 (recur)
                 (async/close! response))))))
       :push
-      (napi/handle-push command))))
+      (napi/handle-push (:data command)))))
 
 (defn on-text [ws message]
   (let [stream (ByteArrayInputStream. (.getBytes message))

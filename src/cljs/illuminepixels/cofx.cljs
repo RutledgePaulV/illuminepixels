@@ -20,4 +20,9 @@
           (rf/dispatch [::events/websocket-disconnected])
           (rf/dispatch [::events/websocket-connect config]))))))
 
+(defn websocket-msg-cofx [{:keys [sink message]}]
+  (async/put! sink {:protocol :push :data message :transaction (random-uuid)}))
+
 (rf/reg-fx :websocket websocket-cofx)
+
+(rf/reg-fx :ws-message websocket-msg-cofx)

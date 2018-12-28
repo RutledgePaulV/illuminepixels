@@ -59,10 +59,11 @@
   (walk/postwalk
     (fn [form]
       (if (code-block? form)
-        (let [code        (extract-code form)
-              highlighted (glow/highlight-html code)
-              as-hiccup   (html->hiccup highlighted)]
-          (expand-whitespace as-hiccup))
+        (-> form
+            (extract-code)
+            (glow/highlight-html)
+            (html->hiccup)
+            (expand-whitespace))
         form))
     html))
 
