@@ -13,6 +13,7 @@
                  [com.cognitect/transit-clj "0.8.313"]
                  [com.cognitect/transit-cljs "0.8.256"]
                  [com.vodori/missing "0.1.5"]
+                 [juji/editscript "0.3.2"]
                  [quil "2.7.1"]
                  [mount "0.1.15"]
                  [re-frame "0.10.6"]

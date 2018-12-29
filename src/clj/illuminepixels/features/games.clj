@@ -1,15 +1,20 @@
 (ns illuminepixels.features.games
   (:require [illuminepixels.network.api :as api]
             [clojure.core.async :as async]
-            [illuminepixels.utils :as utils])
+            [illuminepixels.utils :as utils]
+            [illuminepixels.common :as com])
   (:import (java.util UUID)))
 
+(defn rand-r [] (+ 10 (rand-int 25)))
+(defn rand-component [] (+ 135 (rand-int 120)))
+(defn rand-color [] [(rand-component) (rand-component) (rand-component)])
 
 (defonce game-state
-  (atom {:id (UUID/randomUUID) :circles []}))
+  (atom {:circles []}))
 
 (defmethod api/handle-push :mouse-pressed [{{:keys [x y]} :event}]
-  (swap! game-state update :circles conj [:x x :y y]))
+  (let [state {:x x :y y :color (rand-color) :radius (rand-r)}]
+    (swap! game-state update :circles conj state)))
 
 (defmethod api/handle-push :key-pressed [data]
   (println "received key press event:" data)
@@ -24,5 +29,5 @@
     (add-watch game-state watch
       (fn [k r o n]
         (when (not= o n)
-          (async/>!! chan n))))
+          (async/>!! chan (com/get-edits o n)))))
     chan))

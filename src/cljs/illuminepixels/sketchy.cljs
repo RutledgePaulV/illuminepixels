@@ -1,14 +1,20 @@
 (ns illuminepixels.sketchy
   (:require [quil.core :as q]
             [quil.middleware :as m]
-            [re-frame.core :as rf]))
+            [re-frame.core :as rf]
+            [illuminepixels.common :as com]))
 
 (defn initial-state [command]
-  (let [sub (rf/subscribe [:illuminepixels.subs/subscribe command])]
+  (let [reducer #(if (nil? %1) %2 (com/apply-edits %1 %2))
+        message [:illuminepixels.subs/subscribe command nil reducer]
+        sub     (rf/subscribe message)]
     {:snap @sub :sub sub}))
 
-(defn draw-state [snapshot]
-  (q/background 200))
+(defn draw-state [{:keys [circles]}]
+  (q/background 200)
+  (doseq [{:keys [x y radius color]} circles]
+    (apply q/fill color)
+    (q/ellipse x y radius radius)))
 
 (defn make-sketch
   ([command]
