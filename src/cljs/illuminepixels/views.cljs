@@ -115,9 +115,8 @@
       (fn [component])})
    (-> sketch meta :name)])
 
-(defn game-panel [slug]
-  (let [command {:kind slug}
-        sketchy (sketchy/make-sketch command)]
+(defn game-panel [type slug]
+  (let [sketchy (sketchy/make-sketch type slug)]
     [:div.row
      [:div.col.col-md-8.col-md-offset-2
       [:div.panel
@@ -145,7 +144,7 @@
    [navigation]
    (case name
      :home-panel [home-panel]
-     :game-panel [game-panel (get path-params :slug)]
+     :game-panel [game-panel (get path-params :slug) "game-instance-id"]
      :games-panel [games-panel]
      :blog-panel [blog-panel (get path-params :slug)]
      :blogs-panel [blogs-panel]

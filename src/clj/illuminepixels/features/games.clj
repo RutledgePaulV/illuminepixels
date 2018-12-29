@@ -1,33 +1,31 @@
 (ns illuminepixels.features.games
   (:require [illuminepixels.network.api :as api]
             [clojure.core.async :as async]
-            [illuminepixels.utils :as utils]
-            [illuminepixels.common :as com])
-  (:import (java.util UUID)))
+            [illuminepixels.games.proto :as pro]
+            [illuminepixels.utils :as utils]))
 
-(defn rand-r [] (+ 10 (rand-int 25)))
-(defn rand-component [] (+ 135 (rand-int 120)))
-(defn rand-color [] [(rand-component) (rand-component) (rand-component)])
+(defonce games (atom {}))
 
-(defonce game-state
-  (atom {:circles []}))
+(defn get-game-instance [type slug]
+  (letfn [(updater [games k]
+            (if (contains? games k)
+              games
+              (assoc games k (pro/start-game type))))]
+    (let [k {:type type :slug slug}]
+      (get (swap! games updater k) k))))
 
-(defmethod api/handle-push :mouse-pressed [{{:keys [x y]} :event}]
-  (let [state {:x x :y y :color (rand-color) :radius (rand-r)}]
-    (swap! game-state update :circles conj state)))
-
-(defmethod api/handle-push :key-pressed [data]
-  (println "received key press event:" data)
-  (swap! game-state update :circles conj [:x 10 :y 10]))
-
-(defmethod api/handle-subscribe :circles [data]
-  (let [chan  (async/chan)
-        watch (UUID/randomUUID)]
-    (async/put! chan @game-state)
+(defmethod api/handle-subscribe :game [{:keys [type slug]}]
+  (let [game (get-game-instance type slug)
+        chan (async/chan)]
     (utils/on-close chan
-      (fn [] (remove-watch game-state watch)))
-    (add-watch game-state watch
-      (fn [k r o n]
-        (when (not= o n)
-          (async/>!! chan (com/get-edits o n)))))
+      (fn [] (pro/unsubscribe game chan)))
+    (pro/subscribe game chan)
     chan))
+
+(defmethod api/handle-push :mouse-pressed [{:keys [event type slug]}]
+  (let [game (get-game-instance type slug)]
+    (pro/mouse-pressed! game event)))
+
+(defmethod api/handle-push :key-pressed [{:keys [event type slug]}]
+  (let [game (get-game-instance type slug)]
+    (pro/key-pressed! game event)))

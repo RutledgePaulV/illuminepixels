@@ -4,11 +4,14 @@
             [re-frame.core :as rf]
             [illuminepixels.common :as com]))
 
-(defn initial-state [command]
+(defn initial-state [type slug]
   (let [reducer #(if (nil? %1) %2 (com/apply-edits %1 %2))
-        message [:illuminepixels.subs/subscribe command nil reducer]
+        message [:illuminepixels.subs/subscribe
+                 {:kind :game :type type :slug slug}
+                 nil
+                 reducer]
         sub     (rf/subscribe message)]
-    {:snap @sub :sub sub}))
+    {:snap @sub :sub sub :type type :slug slug}))
 
 (defn draw-state [{:keys [circles]}]
   (q/background 200)
@@ -17,15 +20,15 @@
     (q/ellipse x y radius radius)))
 
 (defn make-sketch
-  ([command]
-   (make-sketch command [500 500]))
-  ([command dimensions]
-   (make-sketch command dimensions 30))
-  ([command dimensions framerate]
+  ([type slug]
+   (make-sketch type slug [500 500]))
+  ([type slug dimensions]
+   (make-sketch type slug dimensions 30))
+  ([type slug dimensions framerate]
    (letfn [(setup []
              (q/frame-rate framerate)
              (q/color-mode :hsb)
-             (initial-state command))
+             (initial-state type slug))
 
            (draw [{:keys [snap]}]
              (when (some? snap)
@@ -34,16 +37,18 @@
            (update-state [{:keys [sub] :as state}]
              (update state :snap (constantly @sub)))
 
-           (mouse-press [{:keys [snap] :as state} event]
+           (mouse-press [{:keys [type slug] :as state} event]
              (let [message {:kind  :mouse-pressed
-                            :game  (get snap :id)
+                            :type  type
+                            :slug  slug
                             :event event}]
                (rf/dispatch [:illuminepixels.events/websocket-message message])
                state))
 
-           (key-press [{:keys [snap] :as state} event]
+           (key-press [{:keys [type slug] :as state} event]
              (let [message {:kind  :key-pressed
-                            :game  (get snap :id)
+                            :type  type
+                            :slug  slug
                             :event event}]
                (rf/dispatch [:illuminepixels.events/websocket-message message])
                state))]
