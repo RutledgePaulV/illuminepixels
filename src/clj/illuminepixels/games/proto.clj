@@ -60,7 +60,6 @@
     (async/go-loop []
       (let [[events] (reset-vals! queue [])
             [time] (miss/timing (update! game #(f % events)))]
-        (println time)
         (when (> FREQ time)
           (async/<! (async/timeout (- FREQ time))))
         (recur)))
