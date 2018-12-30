@@ -35,10 +35,10 @@
              [:a {:key target :href target} [:h6 v]])))]]]))
 
 
-(defn peer-display []
-  (let [{:keys [path]} @(rf/subscribe [::subs/active-route])
-        {:keys [peers]} @(rf/subscribe [::subs/subscribe {:kind :peers :route path}])]
-    [:span (str peers " " (if (> peers 1) "viewers" "viewer"))]))
+(defn peer-display [peer-key]
+  (let [command {:kind :peers :key peer-key}
+        {:keys [peers]} @(rf/subscribe [::subs/subscribe command])]
+    [:span (str peers " " (if (> peers 1) "peers" "peer"))]))
 
 (defn home-panel []
   [:div.row
@@ -63,7 +63,7 @@
         [:a {:href (routes/view->path :about-panel)} "Paul Rutledge"]
         "."]]]
      [:div.panel-footer
-      [:div {:style {:float "right"}} [peer-display]]
+      [:div {:style {:float "right"}} [peer-display :home]]
       [:div [:span "(ノಠ益ಠ)ノ彡┻━┻"]]]]]])
 
 (defn blogs-panel []
@@ -86,7 +86,7 @@
       [:div.panel
        [:div.panel-body (:html about)]
        [:div.panel-footer
-        [:div {:style {:float "right"}} [peer-display]]
+        [:div {:style {:float "right"}} [peer-display :about]]
         [:div
          [:a {:href "https://github.com/RutledgePaulV" :target "_blank"} "Github"]
          [:span "  /  "]
@@ -100,7 +100,7 @@
        [:div.panel-body
         [:section (:html blog)]]
        [:div.panel-footer
-        [:div {:style {:float "right"}} [peer-display]]
+        [:div {:style {:float "right"}} [peer-display slug]]
         [:div [:span "┻━┻ ︵\uFEFF ¯\\(ツ)/¯ ︵ ┻━┻"]]]]]]))
 
 (defn canvas [id]
@@ -123,7 +123,7 @@
        [:div.panel-body
         [:section {:style {:text-align "center"}} [sketch sketchy]]]
        [:div.panel-footer
-        [:div {:style {:float "right"}} [peer-display]]
+        [:div {:style {:float "right"}} [peer-display {:type type :slug slug}]]
         [:div [:span "┬─┬ノ( º _ ºノ)"]]]]]]))
 
 (defn games-panel []

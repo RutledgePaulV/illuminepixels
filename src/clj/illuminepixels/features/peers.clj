@@ -9,12 +9,12 @@
 (add-watch peers :reactor
   (fn [k r o n]
     (when (not= o n)
-      (doseq [[route subscriptions] n sub subscriptions]
-        (when (not= (count subscriptions) (count (get o route #{})))
+      (doseq [[k subscriptions] n sub subscriptions]
+        (when (not= (count subscriptions) (count (get o k #{})))
           (async/put! sub {:peers (count subscriptions)}))))))
 
-(defmethod api/handle-subscribe :peers [{:keys [route millis] :or {millis 1000}}]
+(defmethod api/handle-subscribe :peers [{:keys [key millis] :or {millis 1000}}]
   (let [response (async/chan)]
-    (utils/on-close response (fn [] (swap! peers update route disj response)))
-    (swap! peers update route (fnil conj #{}) response)
+    (utils/on-close response (fn [] (swap! peers update key disj response)))
+    (swap! peers update key (fnil conj #{}) response)
     response))
