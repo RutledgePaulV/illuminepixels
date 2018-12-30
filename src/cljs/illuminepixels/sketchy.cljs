@@ -38,18 +38,12 @@
              (update state :snap (constantly @sub)))
 
            (mouse-press [{:keys [type slug] :as state} event]
-             (let [message {:kind  :mouse-pressed
-                            :type  type
-                            :slug  slug
-                            :event event}]
+             (let [message {:kind :mouse-pressed :type type :slug slug :event event}]
                (rf/dispatch [:illuminepixels.events/websocket-message message])
                state))
 
            (key-press [{:keys [type slug] :as state} event]
-             (let [message {:kind  :key-pressed
-                            :type  type
-                            :slug  slug
-                            :event event}]
+             (let [message {:kind :key-pressed :type type :slug slug :event event}]
                (rf/dispatch [:illuminepixels.events/websocket-message message])
                state))]
 

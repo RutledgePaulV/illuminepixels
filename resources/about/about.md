@@ -1,15 +1,15 @@
 Hi, I'm Paul.
 
 My interest in programming began in early highschool with a TI-83+ Silver Edition.
-I taught myself TI-Basic by creating little apps that solved physics equations
-while 'showing the work'. I quickly got hooked on solving classes of problems instead
-of instances and started to prefer programming over video games.
+I taught myself TI-Basic by creating apps that solved physics equations while 'showing the work'. 
+I quickly got hooked on solving classes of problems instead of instances and started to prefer 
+programming to video games.
 
-Since then I went to college for Mathematics and Computer Science; discovered a proclivity for architecture, devops, and security; fell in love with 
-functional programming; taught myself Clojure; taught my team Clojure; and built a successful multi-tenant
-microservice product platform from the ground up with Clojure and Kubernetes. These days I continue
-to lead the technical efforts while mentoring others as we scale our team and products to meet
-the demands of *real customers*.
+Since then I went to college for Mathematics and Computer Science; discovered a proclivity for architecture, 
+devops, and security; fell in love with functional programming; taught myself Clojure; taught my team Clojure; 
+and built a successful multi-tenant product suite from the ground up with Clojure and Kubernetes. These days I 
+continue to lead the technical efforts of our team while mentoring others as we scale our products to meet
+the demands of real customers.
 
 ___
 
@@ -17,9 +17,7 @@ ___
 
 ### Leadership
 
-I've lead orchestra sections, karate classes, resident assistants, and software teams. 
-
-I choose to lead primarily by doing, teaching, and inspiring. I have little interest in tasking and tab keeping.
+I've lead orchestra sections, karate classes, resident assistants, and software teams.
 
 - Led transition from monolithic to microservice architecture
 - Led transition from customer specific development to configurable multi-tenant SaaS
@@ -30,12 +28,12 @@ I choose to lead primarily by doing, teaching, and inspiring. I have little inte
 
 These are some of the individual contributor works I'm most proud of.
 
-- Wrote type safe database agnostic query builders
 - Wrote a predicate expression language grammar and compilers
+- Wrote a type safe and database agnostic query builder library
 - Created an NGINX security module for accessing S3 files via signed links
 - Implemented a periodic backup / cleanup process with per-customer live restoration
+- Created a secure web accessible Clojure console to perform audited database migrations
 - Implemented a collaborative document viewer using websockets and authoritative server state
-- Created a secure web accessible Clojure console to perform audited database migrations in production
 
 
 ___

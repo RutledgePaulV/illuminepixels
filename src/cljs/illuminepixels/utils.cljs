@@ -48,7 +48,7 @@
 
 (defn format-date [date]
   (cond
-    (number? date) (format-date (js/Date date))
+    (number? date) (format-date (js/Date. (* 1000 date)))
     (string? date) (format-date (parse-date date))
     (instance? js/Date date) (.toLocaleDateString date)
     :otherwise (str date)))
