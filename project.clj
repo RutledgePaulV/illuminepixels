@@ -7,7 +7,7 @@
                  [ring/ring-devel "1.7.1"]
                  [ring/ring-servlet "1.7.1"]
                  [ring/ring-defaults "0.3.2"]
-                 [org.clojars.rutledgepaulv/websocket-layer "0.1.0"]
+                 [org.clojars.rutledgepaulv/websocket-layer "0.1.1"]
                  [com.taoensso/timbre "4.10.0"]
                  [org.slf4j/slf4j-simple "1.7.25"]
                  [com.cognitect/transit-cljs "0.8.256"]
