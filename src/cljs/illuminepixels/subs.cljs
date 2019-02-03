@@ -29,12 +29,12 @@
           values          (deref db)
           sink            (get-in values [:websocket :sink])
           source          (get-in values [:websocket :source])]
-      (letfn [(tap [{:keys [protocol transaction]}]
+      (letfn [(tap [{:keys [id proto]}]
                 (and
-                  (= protocol :subscription)
-                  (= new-transaction transaction)))
+                  (= proto :subscription)
+                  (= new-transaction id)))
               (command [datas]
-                (merge datas {:transaction new-transaction :protocol protocol}))]
+                (merge datas {:id new-transaction :proto protocol}))]
         (let [sub (async/tap source (async/chan 1 (filter tap)))]
           (async/go-loop []
             (when-some [event (async/<! sub)]
@@ -49,5 +49,5 @@
             :on-dispose
             (fn []
               (async/close! sub)
-              (async/put! sink (command {:unsubscribe true}))
+              (async/put! sink (command {:close true}))
               (rf/dispatch [::events/dissoc-in [:subscriptions new-transaction]]))))))))

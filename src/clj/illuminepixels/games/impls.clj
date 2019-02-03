@@ -21,4 +21,4 @@
                   (for [{{:keys [x y]} :event} (reverse events)]
                     {:x x :y y :radius (rand-r) :color (rand-color)})]
               (update state :circles #(vec (take 20 (concat added %))))))]
-    (re/new-game {:circles []} reducer)))
+    (re/create-reactor {:circles []} reducer)))

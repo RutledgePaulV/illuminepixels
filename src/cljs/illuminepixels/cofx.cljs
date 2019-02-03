@@ -12,7 +12,7 @@
           (async/<! (ws/connect url {:format fmt/transit}))
           multiplexed (async/mult source)]
       ; start the heartbeat
-      (async/put! sink {:protocol :subscription :data {:kind :ping} :transaction (random-uuid)})
+      (async/put! sink {:proto :subscription :data {:kind :ping} :id (random-uuid)})
       (rf/dispatch [::events/websocket-connected {:socket socket :source multiplexed :sink sink}])
       (async/go
         (let [{:keys [code reason]} (async/<! close-status)]
@@ -21,7 +21,7 @@
           (rf/dispatch [::events/websocket-connect config]))))))
 
 (defn websocket-msg-cofx [{:keys [sink message]}]
-  (async/put! sink {:protocol :push :data message :transaction (random-uuid)}))
+  (async/put! sink {:proto :push :data message :id (random-uuid)}))
 
 (rf/reg-fx :websocket websocket-cofx)
 

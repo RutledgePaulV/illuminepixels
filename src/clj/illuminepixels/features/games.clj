@@ -1,5 +1,5 @@
 (ns illuminepixels.features.games
-  (:require [illuminepixels.network.api :as api]
+  (:require [websocket-layer.core :as wl]
             [clojure.core.async :as async]
             [illuminepixels.games.impls :as impls]
             [illuminepixels.games.reactor :as re]
@@ -15,7 +15,7 @@
     (let [k {:type type :slug slug}]
       (get (swap! games updater k) k))))
 
-(defmethod api/handle-subscribe :game [{:keys [type slug]}]
+(defmethod wl/handle-subscription :game [{:keys [type slug]}]
   (let [game (get-game-instance type slug)
         chan (async/chan)]
     (utils/on-close chan
@@ -23,8 +23,8 @@
     (re/subscribe game chan)
     chan))
 
-(defmethod api/handle-push :mouse-pressed [{:keys [event type slug]}]
+(defmethod wl/handle-push :mouse-pressed [{:keys [event type slug]}]
   (-> (get-game-instance type slug) (re/mouse-pressed! event)))
 
-(defmethod api/handle-push :key-pressed [{:keys [event type slug]}]
+(defmethod wl/handle-push :key-pressed [{:keys [event type slug]}]
   (-> (get-game-instance type slug) (re/key-pressed! event)))

@@ -4,7 +4,7 @@
             [illuminepixels.markdown :as mark]
             [clojure.string :as strings]
             [illuminepixels.utils :as utils]
-            [illuminepixels.network.api :as api]
+            [websocket-layer.core :as wl]
             [illuminepixels.introspect :as intro])
   (:import (java.io File)))
 
@@ -27,8 +27,8 @@
                    (update data :metadata merge (or k {}))))))))
 
 
-(defmethod api/handle-subscribe :blogs [data]
+(defmethod wl/handle-subscription :blogs [data]
   (utils/polling 1000 (read-markdowns "posts")))
 
-(defmethod api/handle-subscribe :about [data]
+(defmethod wl/handle-subscription :about [data]
   (utils/polling 1000 (first (read-markdowns "about"))))

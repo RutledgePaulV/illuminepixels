@@ -1,8 +1,9 @@
 (ns illuminepixels.network.socket
   (:require [illuminepixels.network.http :as http]
-            [illuminepixels.network.websocket :as ws]
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.adapter.jetty9 :as jetty]
+            [taoensso.timbre :as logger]
+            [websocket-layer.network :as net]
             [missing.core :as miss]))
 
 
@@ -16,7 +17,10 @@
   (wrap-web-middleware #'http/web-routes))
 
 (def websocket-handler
-  (wrap-websocket-middleware #'ws/websocket-routes))
+  (wrap-websocket-middleware
+    (net/websocket-handler
+      {:exception-handler #(logger/error %)
+       :encoding          :transit-json})))
 
 (defn server [settings]
   (let [forced-options {:join? false :websockets {"/ws" websocket-handler}}]

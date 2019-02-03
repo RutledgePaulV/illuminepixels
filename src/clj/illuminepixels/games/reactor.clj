@@ -17,7 +17,7 @@
   (mouse-pressed! [this event]))
 
 
-(defn new-game [initial reducer]
+(defn create-reactor [initial reducer]
   (let [closure (atom {:state initial :subscribers #{} :events []})]
     (letfn [(observe! []
               (add-watch closure :reactor
@@ -25,12 +25,24 @@
                      {old-state :state old-subs :subscribers}
                      {new-state :state new-subs :subscribers}]
                   (when (not= old-subs new-subs)
-                    (doseq [chan (sets/difference new-subs old-subs)]
+                    (doseq [chan (shuffle (sets/difference new-subs old-subs))]
                       (async/put! chan new-state)))
                   (when (not= old-state new-state)
                     (let [edits (com/get-edits old-state new-state)]
                       (doseq [chan (shuffle (sets/intersection new-subs old-subs))]
-                        (async/put! chan edits)))))))]
+                        (async/put! chan edits)))))))
+            (game-loop! []
+              (async/go-loop []
+                (let [updater
+                      (fn [{:keys [state events] :as x}]
+                        (-> x
+                            (assoc :events [])
+                            (assoc :state (reducer state events))))
+                      [time] (miss/timing (swap! closure updater))]
+                  (if (> MAX_LOOP_MILLIS time)
+                    (async/<! (async/timeout (- MAX_LOOP_MILLIS time)))
+                    (println "Game loop iteration exceeded time allowed by framerate."))
+                  (recur))))]
       (reify GameReactor
         (key-pressed! [this event]
           (swap! closure update :events conj {:kind :key :event event}))
@@ -41,16 +53,5 @@
         (unsubscribe [this chan]
           (swap! closure update :subscribers disj chan))
         (start [this]
-          (observe!)
-          (async/go-loop []
-            (let [updater (fn [{:keys [state events] :as x}]
-                            (-> x
-                                (assoc :events [])
-                                (assoc :state (reducer state events))))
-                  [time] (miss/timing (swap! closure updater))]
-              (if (> MAX_LOOP_MILLIS time)
-                (async/<! (async/timeout (- MAX_LOOP_MILLIS time)))
-                (println "Game loop iteration exceeded time allowed by framerate."))
-              (recur)))
-          this)))))
+          (observe!) (game-loop!) this)))))
 
