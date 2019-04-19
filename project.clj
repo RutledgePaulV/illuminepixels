@@ -8,29 +8,31 @@
                  [ring/ring-servlet "1.7.1"]
                  [ring/ring-defaults "0.3.2"]
                  [org.clojars.rutledgepaulv/websocket-layer "0.1.1"]
+                 [org.clojars.rutledgepaulv/re-frame-websocket-fx "0.1.0-SNAPSHOT"]
                  [com.taoensso/timbre "4.10.0"]
-                 [org.slf4j/slf4j-simple "1.7.25"]
+                 [org.slf4j/slf4j-simple "1.7.26"]
                  [com.cognitect/transit-cljs "0.8.256"]
-                 [com.vodori/missing "0.1.6"]
-                 [juji/editscript "0.3.2"]
+                 [com.vodori/missing "0.1.9"]
+                 [juji/editscript "0.3.3"]
                  [quil "2.8.0"]
                  [mount "0.1.16"]
                  [re-frame "0.10.6"]
-                 [cljsjs/react "16.6.0-0"]
-                 [cljsjs/react-dom "16.6.0-0"]
+                 [cljsjs/react "16.8.3-0"]
+                 [cljsjs/react-dom "16.8.3-0"]
                  [venantius/glow "0.1.5"]
+                 [day8.re-frame/tracing-stubs "0.5.1"]
                  [reagent "0.8.1" :exclusions [cljsjs/react cljsjs/react-dom]]
                  [re-frame "0.10.6" :exclusions [cljsjs/react cljsjs/react-dom]]
                  [markdown-clj "1.0.7"]
                  [hickory "0.7.1"]
                  [clj-jgit "0.8.10"]
-                 [metosin/reitit-core "0.2.13"]
-                 [metosin/reitit-schema "0.2.13"]
-                 [metosin/reitit-frontend "0.2.13"]
-                 [garden "1.3.6"]
+                 [metosin/reitit-core "0.3.1"]
+                 [metosin/reitit-schema "0.3.1"]
+                 [metosin/reitit-frontend "0.3.1"]
+                 [garden "1.3.9"]
                  [ns-tracker "0.3.1"]
                  [compojure "1.6.1"]
-                 [haslett "0.1.2"]]
+                 [haslett "0.1.3"]]
 
   :plugins [[lein-cljsbuild "1.1.7"] [lein-garden "0.3.0"]]
 
@@ -55,18 +57,17 @@
   :profiles
   {:dev
    {:dependencies [[binaryage/devtools "0.9.10"]
-                   [day8.re-frame/re-frame-10x "0.3.6-react16"]
-                   [day8.re-frame/tracing "0.5.1"]
-                   [cider/piggieback "0.3.10"]
+                   [day8.re-frame/re-frame-10x "0.4.0"]
+                   [cider/piggieback "0.4.0"]
                    [figwheel-sidecar "0.5.18"]]
 
-    :repl-options {:nrepl-middleware [cider.piggieback/wrap-cljs-repl]}}
+    :source-paths ["script"]
 
-   :stubs
-   {:dependencies [[day8.re-frame/tracing-stubs "0.5.1"]]}
+    :repl-options {:init-ns          user
+                   :nrepl-middleware [cider.piggieback/wrap-cljs-repl]}}
 
    :build
-   [:stubs {:prep-tasks ["compile" ["cljsbuild" "once" "min"] ["garden" "once"]]}]}
+   {:prep-tasks ["compile" ["cljsbuild" "once" "min"] ["garden" "once"]]}}
 
   :cljsbuild
   {:builds
