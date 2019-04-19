@@ -4,7 +4,7 @@
     [reagent.ratom :as ratom]
     [illuminepixels.events :as events]
     [illuminepixels.utils :as utils]
-    [re-frame-websocket-fx.websocket-fx :as wfx]))
+    [websocket-fx.core :as wfx]))
 
 (rf/reg-sub ::db
   (fn [db _] db))
@@ -40,4 +40,4 @@
       (ratom/make-reaction
         (fn [] (or (get-in @db [:subscriptions topic]) initial))
         :on-dispose
-        (fn [] (rf/dispatch [:re-frame-websocket-fx.websocket-fx/cancel-subscription :server topic]))))))
+        (fn [] (rf/dispatch [:wfx/cancel-subscription :server topic]))))))

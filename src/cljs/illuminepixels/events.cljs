@@ -2,13 +2,13 @@
   (:require
     [re-frame.core :as rf]
     [illuminepixels.db :as db]
-    [re-frame-websocket-fx.websocket-fx :as wfx]
+    [websocket-fx.core :as wfx]
     [illuminepixels.utils :as utils]))
 
 (rf/reg-event-fx
   ::initialize
   (fn [_ _]
-    {:db         db/default-db
+    {:db       db/default-db
      :dispatch [::wfx/connect :server {:format :transit-json}]}))
 
 (rf/reg-event-db
