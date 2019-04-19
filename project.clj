@@ -20,7 +20,6 @@
                  [cljsjs/react "16.8.3-0"]
                  [cljsjs/react-dom "16.8.3-0"]
                  [venantius/glow "0.1.5"]
-                 [day8.re-frame/tracing-stubs "0.5.1"]
                  [reagent "0.8.1" :exclusions [cljsjs/react cljsjs/react-dom]]
                  [re-frame "0.10.6" :exclusions [cljsjs/react cljsjs/react-dom]]
                  [markdown-clj "1.0.7"]

@@ -16,7 +16,8 @@
   :<- [::db]
   :<- [::wfx/status :server]
   (fn [[db status]]
-    (and (some? (:active-route db)) (= :connected status))))
+    (and (some? (:active-route db))
+         (= :connected status))))
 
 (rf/reg-sub ::blogs
   :<- [::subscribe {:kind :blogs}]
@@ -34,10 +35,11 @@
       (get indexed (name slug)))))
 
 (rf/reg-sub-raw ::subscribe
-  (fn [db [_ topic initial reducer]]
-    (let [reducer (or reducer (fn [_ x] x))]
-      (rf/dispatch [::events/subscribe topic initial reducer])
+  (fn [db [_ query initial reducer]]
+    (let [id      (random-uuid)
+          reducer (or reducer (fn [_ x] x))]
+      (rf/dispatch [::events/subscribe id query initial reducer])
       (ratom/make-reaction
-        (fn [] (or (get-in @db [:subscriptions topic]) initial))
+        (fn [] (or (get-in @db [:subscriptions id]) initial))
         :on-dispose
-        (fn [] (rf/dispatch [:wfx/cancel-subscription :server topic]))))))
+        (fn [] (rf/dispatch [::wfx/cancel-subscription :server id]))))))

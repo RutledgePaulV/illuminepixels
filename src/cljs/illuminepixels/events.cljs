@@ -8,8 +8,13 @@
 (rf/reg-event-fx
   ::initialize
   (fn [_ _]
-    {:db       db/default-db
-     :dispatch [::wfx/connect :server {:format :transit-json}]}))
+    {:db
+     db/default-db
+     :dispatch-n
+     [[::wfx/connect
+       :server
+       {:format     :transit-json
+        :on-connect [::wfx/subscribe :server :heartbeat {:message {:kind :ping}}]}]]}))
 
 (rf/reg-event-db
   ::assoc-in
@@ -47,8 +52,8 @@
 
 (rf/reg-event-fx
   ::subscribe
-  (fn [_ [_ query initial reducer]]
+  (fn [_ [_ topic query initial reducer]]
     {:dispatch
-     [::wfx/subscribe :server query
+     [::wfx/subscribe :server topic
       {:message    query
-       :on-message [::subscription-message query initial reducer]}]}))
+       :on-message [::subscription-message topic initial reducer]}]}))
