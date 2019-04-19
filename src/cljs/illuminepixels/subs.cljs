@@ -40,4 +40,4 @@
       (ratom/make-reaction
         (fn [] (or (get-in @db [:subscriptions topic]) initial))
         :on-dispose
-        (fn [] (rf/dispatch [:re-frame-websocket-fx.websocket-fx/cancel-subscription topic]))))))
+        (fn [] (rf/dispatch [:re-frame-websocket-fx.websocket-fx/cancel-subscription :server topic]))))))
