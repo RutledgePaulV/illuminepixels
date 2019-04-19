@@ -8,7 +8,7 @@
                  [ring/ring-servlet "1.7.1"]
                  [ring/ring-defaults "0.3.2"]
                  [org.clojars.rutledgepaulv/websocket-layer "0.1.1"]
-                 [org.clojars.rutledgepaulv/re-frame-websocket-fx "0.1.0-SNAPSHOT"]
+                 [org.clojars.rutledgepaulv/websocket-fx "0.1.0-SNAPSHOT"]
                  [com.taoensso/timbre "4.10.0"]
                  [org.slf4j/slf4j-simple "1.7.26"]
                  [com.cognitect/transit-cljs "0.8.256"]
