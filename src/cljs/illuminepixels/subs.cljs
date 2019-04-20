@@ -16,8 +16,12 @@
   :<- [::db]
   :<- [::wfx/status :server]
   (fn [[db status]]
-    (and (some? (:active-route db))
-         (= :connected status))))
+    (and (some? (:active-route db)) (not= :pending status))))
+
+(rf/reg-sub ::disconnected?
+  :<- [::wfx/status :server]
+  (fn [status]
+    (= :reconnecting status)))
 
 (rf/reg-sub ::blogs
   :<- [::subscribe {:kind :blogs}]
