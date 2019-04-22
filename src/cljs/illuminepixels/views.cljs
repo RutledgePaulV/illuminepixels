@@ -138,15 +138,21 @@
           description]]])]))
 
 
-(defn main-panel [{:keys [name path-params]}]
-  [:div
-   [corner]
-   [navigation]
-   (case name
-     :home-panel [home-panel]
-     :game-panel [game-panel (get path-params :slug) "game-instance-id"]
-     :games-panel [games-panel]
-     :blog-panel [blog-panel (get path-params :slug)]
-     :blogs-panel [blogs-panel]
-     :about-panel [about-panel]
-     [:div "Not found!"])])
+(defn main-panel []
+  (let [{:keys [name path-params]}
+        @(rf/subscribe [::subs/active-route])
+        spotty?
+        @(rf/subscribe [::subs/disconnected?])]
+    [:div
+     [corner]
+     [navigation]
+     (if spotty?
+       [:div "We're having trouble reaching our server, please check your internet connection."]
+       (case name
+         :home-panel [home-panel]
+         :game-panel [game-panel (get path-params :slug) "game-instance-id"]
+         :games-panel [games-panel]
+         :blog-panel [blog-panel (get path-params :slug)]
+         :blogs-panel [blogs-panel]
+         :about-panel [about-panel]
+         [:div "Not found!"]))]))

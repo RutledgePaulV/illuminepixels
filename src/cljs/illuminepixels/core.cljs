@@ -5,16 +5,13 @@
     [illuminepixels.events :as events]
     [illuminepixels.routes :as routes]
     [illuminepixels.views :as views]
-    [illuminepixels.subs :as subs]
-    [illuminepixels.utils :as utils]
-    [illuminepixels.cofx :as cofx]))
+    [illuminepixels.subs :as subs]))
 
 (defn top-panel []
-  (let [ready? (rf/subscribe [::subs/initialised?])
-        route  (rf/subscribe [::subs/active-route])]
+  (let [ready? (rf/subscribe [::subs/initialised?])]
     (if-not @ready?
       [:div "Initialising ..."]
-      [views/main-panel @route])))
+      [views/main-panel])))
 
 (defn mount-root []
   (rf/clear-subscription-cache!)
@@ -22,8 +19,7 @@
     (.getElementById js/document "app")))
 
 (defn initial-events []
-  (rf/dispatch-sync [::events/initialize-db])
-  (rf/dispatch-sync [::events/websocket-connect {:url (utils/websocket-url)}]))
+  (rf/dispatch-sync [::events/initialize]))
 
 (defn ^:export init []
   (enable-console-print!)
