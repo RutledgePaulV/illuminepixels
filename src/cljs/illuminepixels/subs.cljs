@@ -46,4 +46,4 @@
       (ratom/make-reaction
         (fn [] (or (get-in @db [:subscriptions id]) initial))
         :on-dispose
-        (fn [] (rf/dispatch [::wfx/cancel-subscription :server id]))))))
+        (fn [] (rf/dispatch [::wfx/unsubscribe :server id]))))))
