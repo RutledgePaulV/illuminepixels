@@ -9,6 +9,8 @@
                  [ring/ring-defaults "0.3.2"]
                  [org.clojars.rutledgepaulv/websocket-layer "0.1.11"]
                  [org.clojars.rutledgepaulv/websocket-fx "0.1.2"]
+                 [com.fasterxml.jackson.core/jackson-databind "2.10.3"]
+                 [com.fasterxml.jackson.core/jackson-core "2.10.3"]
                  [com.taoensso/timbre "4.10.0"]
                  [org.slf4j/slf4j-simple "1.7.30"]
                  [com.cognitect/transit-cljs "0.8.256"]
