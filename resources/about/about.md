@@ -7,9 +7,8 @@ programming to video games.
 
 Since then I went to college for Mathematics and Computer Science; discovered a proclivity for architecture, 
 devops, and security; fell in love with functional programming; taught myself Clojure; taught my team Clojure; 
-and built a successful multi-tenant product suite from the ground up with Clojure and Kubernetes. These days I 
-continue to lead the technical efforts of our team while mentoring others as we scale our products to meet
-the demands of real customers.
+and built a successful multi-tenant product suite from the ground up with Clojure and Kubernetes. Just recently I
+moved on to a large company with different challenges but within a few years I expect to start my own tech company.
 
 ___
 
@@ -47,9 +46,12 @@ This site is built with [clojure](https://clojure.org/about/rationale) and
 for frontend components and [reitit](https://github.com/metosin/reitit) for routing. State is 
 communicated using topic subscriptions multiplexed over a single websocket connection and serialized 
 with [transit](https://github.com/cognitect/transit-format). As you navigate to various pages your 
-browser subscribes and unsubscribe to various topics. On the server subscriptions are fed by 
+browser subscribes and unsubscribe to various topics. On the server, subscriptions are fed by 
 [core.async](https://github.com/clojure/core.async) channels and go blocks. This site is deployed
-as a docker container on a [digital ocean](https://www.digitalocean.com/) server and proxied by 
-[caddy](https://caddyserver.com/) with automatic certificate renewal.
+as a docker container on a [kubernetes](https://kubernetes.io/) cluster hosted at [digital ocean](https://www.digitalocean.com/).
+Requests route through a HA load balancer, [ingress-nginx](https://github.com/kubernetes/ingress-nginx) webserver, and finally land 
+at an embedded jetty server. Builds and deployments are automated using [github actions](https://github.com/features/actions)
+that trigger on every commit.
 
-Isn't that overkill for a profile site? [Perhaps](https://www.youtube.com/watch?v=KwIo9Y9iJ6A).
+
+Isn't that overkill for a blog? [Perhaps](https://www.youtube.com/watch?v=KwIo9Y9iJ6A).
