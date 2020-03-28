@@ -1,7 +1,6 @@
 (ns illuminepixels.utils
   (:require [missing.core :as miss]
-            [clojure.core.async :as async]
-            [websocket-layer.core :as wl]))
+            [clojure.core.async :as async]))
 
 (def default-settings
   {:ring
@@ -11,7 +10,7 @@
     :allow-null-path-info true
     :send-server-version? false}})
 
-(defn get-settings []
+(miss/defmemo get-settings []
   (->> (miss/load-edn-resource "settings.edn")
        (miss/deep-merge default-settings)))
 
@@ -34,15 +33,11 @@
 
 (defmacro polling [timeout & body]
   `(let [chan# (async/chan)
-         shut# (async/promise-chan)
          func# (fn [] ~@body)
          freq# ~timeout]
-     (on-chan-close chan# (fn [] (async/put! shut# ::close)))
-     (async/go-loop [prev# ::impossible]
+     (async/go-loop [prev# nil]
        (let [result# (async/<! (async/thread (func#)))]
-         (when (and (some? result#) (not= result# prev#))
-           (async/>! chan# result#))
-         (async/<! (async/timeout freq#))
-         (when-not (= ::close (async/poll! shut#))
-           (recur result#))))
+         (if (and (some? result#) (not= result# prev#) (async/>! chan# result#))
+           (recur result#)
+           (async/<! (async/timeout freq#)))))
      chan#))

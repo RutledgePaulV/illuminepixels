@@ -104,7 +104,7 @@
         [:div [:span "┻━┻ ︵\uFEFF ¯\\(ツ)/¯ ︵ ┻━┻"]]]]]]))
 
 (defn canvas [id]
-  [:canvas {:id id}])
+  [:div {:id id}])
 
 (defn sketch [sketch]
   [(with-meta
