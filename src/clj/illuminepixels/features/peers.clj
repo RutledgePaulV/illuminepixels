@@ -1,5 +1,6 @@
 (ns illuminepixels.features.peers
   (:require [clojure.core.async :as async]
+            [illuminepixels.utils :as utils]
             [websocket-layer.core :as wl]))
 
 
@@ -14,7 +15,7 @@
 
 (defmethod wl/handle-subscription :peers [{:keys [key millis] :or {millis 1000}}]
   (let [response (async/chan)]
-    (wl/on-chan-close response (fn [] (swap! peers update key disj response)))
+    (utils/on-chan-close response (fn [] (swap! peers update key disj response)))
     (swap! peers update key (fnil conj #{}) response)
     response))
 

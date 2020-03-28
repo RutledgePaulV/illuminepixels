@@ -23,12 +23,21 @@
      (async/put! chan# (do ~@body))
      chan#))
 
+(defn on-chan-close [chan callback]
+  (let [state (.closed chan)
+        ident (miss/uuid)]
+    (add-watch state ident
+               (fn [k r o n]
+                 (when (and (not o) n)
+                   (remove-watch r ident)
+                   (miss/quietly (callback)))))))
+
 (defmacro polling [timeout & body]
   `(let [chan# (async/chan)
          shut# (async/promise-chan)
          func# (fn [] ~@body)
          freq# ~timeout]
-     (wl/on-chan-close chan# (fn [] (async/put! shut# ::close)))
+     (on-chan-close chan# (fn [] (async/put! shut# ::close)))
      (async/go-loop [prev# ::impossible]
        (let [result# (async/<! (async/thread (func#)))]
          (when (and (some? result#) (not= result# prev#))

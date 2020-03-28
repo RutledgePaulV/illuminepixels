@@ -2,7 +2,8 @@
   (:require [websocket-layer.core :as wl]
             [clojure.core.async :as async]
             [illuminepixels.games.impls :as impls]
-            [illuminepixels.games.reactor :as re]))
+            [illuminepixels.games.reactor :as re]
+            [illuminepixels.utils :as utils]))
 
 (defonce games (atom {}))
 
@@ -17,7 +18,7 @@
 (defmethod wl/handle-subscription :game [{:keys [type slug]}]
   (let [game (get-game-instance type slug)
         chan (async/chan)]
-    (wl/on-chan-close chan
+    (utils/on-chan-close chan
       (fn [] (re/unsubscribe game chan)))
     (re/subscribe game chan)
     chan))

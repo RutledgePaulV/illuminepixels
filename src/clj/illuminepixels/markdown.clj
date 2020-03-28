@@ -53,7 +53,7 @@
        (= :code (first (inner hiccup)))))
 
 (defn extract-code [hiccup]
-  (inner (miss/dfs-postorder (partial tag? :code) hiccup)))
+  (inner (miss/dfs (partial tag? :code) hiccup)))
 
 (defn reformat-code [html]
   (walk/postwalk
