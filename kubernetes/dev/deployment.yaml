@@ -24,7 +24,7 @@ spec:
           image: "${IMAGE}"
           ports:
             - containerPort: 3000
-          command: ["lein", "with-profile", "-local,+${FOLDER}", "trampoline", "run"]
+          command: ["lein", "with-profile", "-dev,+stubs", "trampoline", "run"]
           readinessProbe:
             httpGet:
               scheme: HTTP
