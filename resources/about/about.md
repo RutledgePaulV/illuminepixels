@@ -33,6 +33,7 @@ These are some of the individual contributor works I'm most proud of.
 - Implemented a periodic backup / cleanup process with per-customer live restoration
 - Created a secure web accessible Clojure console to perform audited database migrations
 - Implemented a collaborative document viewer using websockets and authoritative server state
+- Created a very sophisticated chrome extension allowing collaborative review / marking up of arbitrary web pages
 
 
 ___
