@@ -1,0 +1,37 @@
+name: Snapshot
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v1
+      - name: Build Docker Image
+        env:
+          DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASS }}
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+          DATOMIC_REPOSITORY_USERNAME: ${{ secrets.DATOMIC_REPOSITORY_USERNAME }}
+          DATOMIC_REPOSITORY_PASSWORD: ${{ secrets.DATOMIC_REPOSITORY_PASSWORD }}
+        run: ./release.sh
+      - name: Configure Kubectl
+        uses: matootie/dokube@v1.2.0
+        with:
+          personalAccessToken: ${{ secrets.DIGITALOCEAN_TOKEN }}
+          clusterName: narky-dev
+          expirationTime: 300
+      - name: Perform Deployment
+        run: |
+          kubectl apply -f target/dev/deployment.yaml
+          kubectl rollout status --timeout=5m -f target/dev/deployment.yaml
+      - name: Notify Slack
+        uses: 8398a7/action-slack@v2
+        with:
+          status: ${{ job.status }}
+          author_name: ${{ github.workflow }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
