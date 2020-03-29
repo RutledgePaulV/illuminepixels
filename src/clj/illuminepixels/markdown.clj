@@ -55,6 +55,34 @@
 (defn extract-code [hiccup]
   (inner (miss/dfs (partial tag? :code) hiccup)))
 
+(defn sexp? [form]
+  (and (tag? :span form)
+       (= "s-exp" (some-> form second :class))))
+
+(defn sexpr-start? [form]
+  (and (sexp? form) (#{"(" "[" "{"} (nth form 2))))
+
+(defn sexpr-close? [form]
+  (and (sexp? form) (#{")" "]" "}"} (nth form 2))))
+
+(defn with-rainbow-class [form depth]
+  (update-in form [1 :class] #(str % " rainbow-" depth)))
+
+(defn rainbow-parens [hiccup]
+  (let [stack (atom 0)]
+    (walk/postwalk
+      (fn [form]
+        (cond
+          (sexpr-start? form)
+          (let [[_ new] (swap-vals! stack inc)]
+            (with-rainbow-class with-rainbow-class new))
+          (sexpr-close? form)
+          (let [[old _] (swap-vals! stack dec)]
+            (with-rainbow-class with-rainbow-class old))
+          :else
+          form))
+      hiccup)))
+
 (defn reformat-code [html]
   (walk/postwalk
     (fn [form]
@@ -79,4 +107,6 @@
        (miss/filter-vals not-empty)
        (miss/map-vals first))
      :html
-     (reformat-code (html->hiccup html))}))
+     (-> (html->hiccup html)
+         (reformat-code)
+         (rainbow-parens))}))

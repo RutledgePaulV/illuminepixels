@@ -1,6 +1,17 @@
 (ns illuminepixels.css
   (:require [garden.def :refer [defstyles]]))
 
+(def RAINBOW
+  ["#a0d7ff"
+   "#e7c7f9"
+   "#fcc6a3"
+   "#fff4b8"
+   "#c2feb9"
+   "#b8ffff"
+   "#8d8f91"
+   "#c9cbcd"
+   "#b1deff"])
+
 (defstyles screen
   [:body {:background-color "rgb(245,245,245)"}]
   [:ul.nav-links [:a {:padding-top "25px"}]]
@@ -12,7 +23,10 @@
      [:.core-fn {:color "#a5f0b4"}]
      [:.variable {:color "#e1e1e1"}]
      [:.number {:color "#fcc6a3"}]
-     [:.s-exp {:color "#a0d7ff"}]
+     [:.s-exp {}]
+     (->> (for [[i color] (map vector (iterate inc 1) (cycle RAINBOW))]
+            [(keyword (str ".rainbow-" i)) {:color color}])
+          (take 100))
      [:.symbol {:color "#e1e1e1"}]
      [:.special-form {:color "#a5f0b4"}]
      [:.background {:color "#282c33"}]

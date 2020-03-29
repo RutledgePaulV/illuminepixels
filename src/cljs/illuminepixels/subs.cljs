@@ -13,10 +13,10 @@
   (fn [db _] (get-in db [:active-route])))
 
 (rf/reg-sub ::initialised?
-  :<- [::db]
+  :<- [::active-route]
   :<- [::wfx/status :server]
-  (fn [[db status]]
-    (and (some? (:active-route db)) (not= :pending status))))
+  (fn [[route status]]
+    (and (some? route) (not= :pending status))))
 
 (rf/reg-sub ::disconnected?
   :<- [::wfx/status :server]

@@ -12,4 +12,6 @@ This is some sample content.
 
 (defn nest [] 
   (+ 1 2 3 4))
+
+(def rainbow '(((((((((()))))))))))
 ```
