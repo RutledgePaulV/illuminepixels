@@ -31,7 +31,7 @@ I've led orchestra sections, karate classes, resident assistants, and software t
 I've delivered impactful software that sees daily use by thousands of users.
 
 - I was the lead developer and architect behind [Pepper Flow](https://www.vodori.com/products/pepper-flow-commercial/).
-- I prototyped the idea and lead the development of [Pepper Flow Digital Review](https://www.vodori.com/products/pepper-flow-digital-review/).
+- I prototyped the idea and led the development of [Pepper Flow Digital Review](https://www.vodori.com/products/pepper-flow-digital-review/).
 
 
 ### Implementations
