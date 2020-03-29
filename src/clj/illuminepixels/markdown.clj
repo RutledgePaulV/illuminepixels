@@ -69,16 +69,16 @@
   (update-in form [1 :class] #(str % " rainbow-" depth)))
 
 (defn rainbow-parens [hiccup]
-  (let [stack (atom 0)]
+  (let [stack (atom -1)]
     (walk/postwalk
       (fn [form]
         (cond
           (sexpr-start? form)
           (let [[_ new] (swap-vals! stack inc)]
-            (with-rainbow-class form new))
+            (with-rainbow-class form (inc (mod new 8))))
           (sexpr-close? form)
           (let [[old _] (swap-vals! stack dec)]
-            (with-rainbow-class form old))
+            (with-rainbow-class form (inc (mod old 8))))
           :else
           form))
       hiccup)))
