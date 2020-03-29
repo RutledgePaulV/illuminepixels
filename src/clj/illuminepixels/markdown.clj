@@ -75,10 +75,10 @@
         (cond
           (sexpr-start? form)
           (let [[_ new] (swap-vals! stack inc)]
-            (with-rainbow-class with-rainbow-class new))
+            (with-rainbow-class form new))
           (sexpr-close? form)
           (let [[old _] (swap-vals! stack dec)]
-            (with-rainbow-class with-rainbow-class old))
+            (with-rainbow-class form old))
           :else
           form))
       hiccup)))
