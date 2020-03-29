@@ -10,7 +10,8 @@
   [:a.github-corner {:position "fixed" :right "0"}]
   [:.syntax
    [:pre
-    {:background "#282c33"}
+    {:background    "#282c33"
+     :margin-bottom "15px"}
     [[:.definition {:color "#a5f0b4"}]
      [:.core-fn {:color "#a5f0b4"}]
      [:.variable {:color "#e1e1e1"}]

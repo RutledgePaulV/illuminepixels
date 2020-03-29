@@ -60,7 +60,7 @@ This site is built with [clojure](https://clojure.org/about/rationale) and
 for frontend components and [reitit](https://github.com/metosin/reitit) for routing. State is 
 communicated using topic subscriptions multiplexed over a single websocket connection and serialized 
 with [transit](https://github.com/cognitect/transit-format). As you navigate to various pages your 
-browser subscribes and unsubscribe to various topics. On the server, subscriptions are fed by 
+browser subscribes and unsubscribes to various topics. On the server, subscriptions are fed by 
 [core.async](https://github.com/clojure/core.async) channels and go blocks. This site is deployed
 as a docker container on a [kubernetes](https://kubernetes.io/) cluster hosted at [digital ocean](https://www.digitalocean.com/).
 Requests route through a HA load balancer, [ingress-nginx](https://github.com/kubernetes/ingress-nginx) webserver, and finally land 

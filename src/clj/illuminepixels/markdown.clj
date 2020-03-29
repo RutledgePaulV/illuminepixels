@@ -60,7 +60,7 @@
        (= "s-exp" (some-> form second :class))))
 
 (defn sexpr-start? [form]
-  (and (sexp? form) (#{"(" "[" "{"} (nth form 2))))
+  (and (sexp? form) (#{"#{" "(" "[" "{"} (nth form 2))))
 
 (defn sexpr-close? [form]
   (and (sexp? form) (#{")" "]" "}"} (nth form 2))))
