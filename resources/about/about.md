@@ -5,10 +5,13 @@ I taught myself TI-Basic by creating apps that solved physics equations while 's
 I quickly got hooked on solving classes of problems instead of instances and started to prefer 
 programming to video games.
 
-Since then I went to college for Mathematics and Computer Science; discovered a proclivity for architecture, 
-devops, and security; fell in love with functional programming; taught myself Clojure; taught my team Clojure; 
-and built a successful multi-tenant product suite from the ground up with Clojure and Kubernetes. Just recently I
-moved on to a large company with different challenges but within a few years I expect to start my own tech company.
+I went to college for Mathematics and Computer Science; rose through the ranks of a small software company;
+discovered a proclivity for architecture, devops, and security; fell in love with functional programming; 
+taught myself Clojure; taught my team Clojure; and built a successful multi-tenant product suite from the 
+ground up with Clojure and Kubernetes. Recently I moved on to a large company with different challenges but 
+within a few years I expect to start my own tech company.
+
+<br/>
 
 ___
 
@@ -16,25 +19,35 @@ ___
 
 ### Leadership
 
-I've lead orchestra sections, karate classes, resident assistants, and software teams.
+I've led orchestra sections, karate classes, resident assistants, and software teams.
 
 - Led transition from monolithic to microservice architecture
 - Led transition from customer specific development to configurable multi-tenant SaaS
 - I identified Clojure as an important technology and led a successful adoption in 2016
 - I identified Kubernetes as an important technology and led a successful adoption in 2015
 
+### Projects
+
+I've delivered impactful software that sees daily use by thousands of users.
+
+- I was the lead developer and architect behind [Pepper Flow](https://www.vodori.com/products/pepper-flow-commercial/).
+- I prototyped the idea and lead the development of [Pepper Flow Digital Review](https://www.vodori.com/products/pepper-flow-digital-review/).
+
+
 ### Implementations
 
-These are some of the individual contributor works I'm most proud of.
+I've written lots of technically challenging code.
 
 - Wrote a predicate expression language grammar and compilers
+- Created a generic file conversion service modeled as a graph
 - Wrote a type safe and database agnostic query builder library
-- Created an NGINX security module for accessing S3 files via signed links
+- Created a custom NGINX security module for accessing S3 files via signed links
 - Implemented a periodic backup / cleanup process with per-customer live restoration
 - Created a secure web accessible Clojure console to perform audited database migrations
 - Implemented a collaborative document viewer using websockets and authoritative server state
-- Created a very sophisticated chrome extension allowing collaborative review / marking up of arbitrary web pages
+- Designed a network protocol with discovery, routing, and buffers to unify communication across browser iframes and web extension contexts (content, background).
 
+<br/>
 
 ___
 
