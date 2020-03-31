@@ -1,6 +1,6 @@
 (ns illuminepixels.core
   (:require
-    [reagent.core :as reagent]
+    [reagent.dom :as dom]
     [re-frame.core :as rf]
     [illuminepixels.events :as events]
     [illuminepixels.routes :as routes]
@@ -15,8 +15,7 @@
 
 (defn mount-root []
   (rf/clear-subscription-cache!)
-  (reagent/render [top-panel]
-    (.getElementById js/document "app")))
+  (dom/render [top-panel] (.getElementById js/document "app")))
 
 (defn initial-events []
   (rf/dispatch-sync [::events/initialize]))

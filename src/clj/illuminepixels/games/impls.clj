@@ -18,7 +18,7 @@
 (defmethod make-game :circles [_]
   (letfn [(reducer [state events]
             (let [added
-                  (for [{{:keys [x y]} :event} (reverse events)]
+                  (for [{{:keys [x y]} :event} events]
                     {:x x :y y :radius (rand-r) :color (rand-color)})]
               (update state :circles #(vec (take 20 (concat added %))))))]
     (re/create-reactor {:circles []} reducer)))

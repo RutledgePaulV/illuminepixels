@@ -13,7 +13,7 @@
         (when (not= (count subscriptions) (count (get o k #{})))
           (async/put! sub {:peers (count subscriptions)}))))))
 
-(defmethod wl/handle-subscription :peers [{:keys [key millis] :or {millis 1000}}]
+(defmethod wl/handle-subscription :peers [{:keys [key]}]
   (let [response (async/chan)]
     (utils/on-chan-close response (fn [] (swap! peers update key disj response)))
     (swap! peers update key (fnil conj #{}) response)

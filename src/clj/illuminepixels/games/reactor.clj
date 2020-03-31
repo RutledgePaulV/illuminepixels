@@ -9,7 +9,7 @@
 (def MAX_LOOP_MILLIS (quot 1000 FPS))
 
 
-(defprotocol GameReactor
+(miss/defonce-protocol GameReactor
   (start [this])
   (subscribe [this chan])
   (unsubscribe [this chan])
