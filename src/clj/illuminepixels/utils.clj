@@ -1,6 +1,7 @@
 (ns illuminepixels.utils
   (:require [missing.core :as miss]
-            [clojure.core.async :as async]))
+            [clojure.core.async :as async]
+            [clojure.java.io :as io]))
 
 (def default-settings
   {:ring
@@ -9,6 +10,9 @@
     :async?               true
     :allow-null-path-info true
     :send-server-version? false}})
+
+(miss/defmemo containerized? []
+  (.exists (io/file "~/.dockerenv")))
 
 (miss/defmemo get-settings []
   (->> (miss/load-edn-resource "settings.edn")
@@ -36,8 +40,14 @@
          func# (fn [] ~@body)
          freq# ~timeout]
      (async/go-loop [prev# nil]
-       (let [result# (async/<! (async/thread (func#)))]
-         (if (and (some? result#) (not= result# prev#) (async/>! chan# result#))
+       (when-some [result# (async/<! (async/thread (func#)))]
+         (if (and (not= result# prev#) (async/>! chan# result#))
            (recur result#)
-           (async/<! (async/timeout freq#)))))
+           (do (async/<! (async/timeout freq#))
+               (recur result#)))))
      chan#))
+
+(defmacro devpoll [timeout & body]
+  `(if (containerized?)
+     (once ~@body)
+     (polling ~timeout ~@body)))

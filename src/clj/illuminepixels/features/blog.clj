@@ -28,7 +28,7 @@
 
 
 (defmethod wl/handle-subscription :blogs [data]
-  (utils/polling 1000 (read-markdowns "posts")))
+  (utils/devpoll 1000 (read-markdowns "posts")))
 
 (defmethod wl/handle-subscription :about [data]
-  (utils/polling 1000 (first (read-markdowns "about"))))
+  (utils/devpoll 1000 (first (read-markdowns "about"))))
