@@ -29,7 +29,7 @@
   {:created  (select-keys (first commits) [:commit :timestamp :message :author])
    :modified (select-keys (last commits) [:commit :timestamp :message :author])})
 
-(defn summarize-project []
+(miss/defmemo summarize-project []
   (let [repo (jgit/load-repo ".")]
     (->>
       (jgit/git-log repo)
