@@ -13,8 +13,6 @@ latest_name="${repository}/${application}:latest-${branch//\//-}"
 
 echo "Building docker image with name [${full_image_name}]"
 docker build \
-  --build-arg USERNAME="${DATOMIC_REPOSITORY_USERNAME}" \
-  --build-arg PASSWORD="${DATOMIC_REPOSITORY_PASSWORD}" \
   -t ${full_image_name} \
   -t ${latest_name} \
   .
